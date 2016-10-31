@@ -116,6 +116,7 @@ void tree_tests() {
     cout << endl;
     largest_k_in_bst(root, 4);
     cout << endl;
+    printTreeByLevel(root);
     
     MyKTreeNode *node = new MyKTreeNode(0);
     node->children[0] = new MyKTreeNode(5);
@@ -185,15 +186,7 @@ void linked_list_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    string s = "  abc\t skk    sldldl \tsss";
-    vector<string> vec;
-    string delimiter = "\t ";
-    split_strings(s, vec, delimiter);
-    for (string s:vec) {
-        cout << s << ",";
-    }
-    
-    cout << endl;
+    tree_tests();
 
     return 0;
 }

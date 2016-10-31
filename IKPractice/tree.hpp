@@ -40,6 +40,7 @@ public:
 
 //---- 09/24/2016
 void bfs_travse(MyTreeNode *root);
+void printTreeByLevel(MyTreeNode *n);
 MyTreeNode *insert_nodes_to_tree(std::vector<int> nodes);
 
 void preorder(MyTreeNode *root);
@@ -79,5 +80,7 @@ MyTreeNode* flip_tree(MyTreeNode *node);
 
 bool is_BST(MyTreeNode *node);
 
+// print all paths for Binary Tree
+void printAllPaths(MyTreeNode* root);
 
 #endif /* tree_hpp */

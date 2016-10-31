@@ -183,6 +183,37 @@ void bfs_travse(MyTreeNode *root)
     }
 }
 
+void printTreeByLevel(MyTreeNode *n)
+{
+    if (n == NULL)
+        return;
+    
+    deque<MyTreeNode *> queue;
+    queue.push_back(n);
+    int node_count = queue.size();
+    
+    while (!queue.empty()) {
+        while (node_count > 0) {
+            MyTreeNode *cur = queue.front();
+            if (cur->left) {
+                queue.push_back(cur->left);
+            }
+            
+            if (cur->right) {
+                queue.push_back(cur->right);
+            }
+            
+            cout << cur->value << " ";
+            queue.pop_front();
+            
+            node_count--;
+        }
+        
+        cout << endl;
+        node_count = queue.size();
+    }
+}
+
 
 //FIXME Wrong implementation
 void remove_node_in_BST(MyTreeNode *node)
@@ -395,6 +426,27 @@ bool is_BST(MyTreeNode *node)
     return is_BSTInOrder(node, prev);
 }
 
+void printAllPaths(MyTreeNode *node, vector<int> &path) {
+    if (node == NULL)
+        return;
+    
+    path.push_back(node->value);
+    if (node->left == NULL && node->right == NULL) {
+        for (int i:path) {
+            cout << i << " ";
+        }
+        cout << endl;
+    } else {
+        printAllPaths(node->left, path);
+        printAllPaths(node->right, path);
+    }
+    path.pop_back();
+}
+
+void printAllPaths(MyTreeNode* root) {
+    vector<int> path;
+    printAllPaths(root, path);
+}
 
 
 
