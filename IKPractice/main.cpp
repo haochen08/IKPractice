@@ -18,6 +18,7 @@
 #include "dp.hpp"
 #include "linked_list.hpp"
 #include "my_string.hpp"
+#include "graph.hpp"
 
 
 using namespace std;
@@ -185,8 +186,22 @@ void linked_list_test() {
     
 }
 
+void graph_test() {
+    
+    vector<int> labels = {0,1,2,3};
+    MyGraph g(labels);
+    g.addEdge(0, 1);
+    g.addEdge(0, 2);
+    g.addEdge(1, 2);
+    g.addEdge(2, 0);
+    g.addEdge(2, 3);
+    g.addEdge(3, 3);
+    g.print();
+    dfs(&g);
+}
+
 int main(int argc, const char * argv[]) {
-    tree_tests();
+    graph_test();
 
     return 0;
 }

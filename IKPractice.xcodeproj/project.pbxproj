@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		87843E0C1DD69EDE00953D5C /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87843E0A1DD69EDE00953D5C /* graph.cpp */; };
 		87F56C711DC11462003C831B /* my_string.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F56C5E1DC11462003C831B /* my_string.cpp */; };
 		87F56C721DC11462003C831B /* tree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F56C5F1DC11462003C831B /* tree.cpp */; };
 		87F56C731DC11462003C831B /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 87F56C601DC11462003C831B /* main.cpp */; };
@@ -32,6 +33,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		87843E0A1DD69EDE00953D5C /* graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = graph.cpp; path = IKPractice/graph.cpp; sourceTree = SOURCE_ROOT; };
+		87843E0B1DD69EDE00953D5C /* graph.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = graph.hpp; path = IKPractice/graph.hpp; sourceTree = SOURCE_ROOT; };
 		87A01D8E1D73436C00A18C6C /* IKPractice */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = IKPractice; sourceTree = BUILT_PRODUCTS_DIR; };
 		87F56C5E1DC11462003C831B /* my_string.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = my_string.cpp; path = IKPractice/my_string.cpp; sourceTree = SOURCE_ROOT; };
 		87F56C5F1DC11462003C831B /* tree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tree.cpp; path = IKPractice/tree.cpp; sourceTree = SOURCE_ROOT; };
@@ -86,6 +89,8 @@
 			children = (
 				87F56C5E1DC11462003C831B /* my_string.cpp */,
 				87F56C5F1DC11462003C831B /* tree.cpp */,
+				87843E0A1DD69EDE00953D5C /* graph.cpp */,
+				87843E0B1DD69EDE00953D5C /* graph.hpp */,
 				87F56C601DC11462003C831B /* main.cpp */,
 				87F56C611DC11462003C831B /* my_string.hpp */,
 				87F56C621DC11462003C831B /* recursion.cpp */,
@@ -173,6 +178,7 @@
 				87F56C761DC11462003C831B /* ad_hoc.cpp in Sources */,
 				87F56C721DC11462003C831B /* tree.cpp in Sources */,
 				87F56C731DC11462003C831B /* main.cpp in Sources */,
+				87843E0C1DD69EDE00953D5C /* graph.cpp in Sources */,
 				87F56C771DC11462003C831B /* sorting_app.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

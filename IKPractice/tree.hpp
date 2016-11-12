@@ -83,4 +83,10 @@ bool is_BST(MyTreeNode *node);
 // print all paths for Binary Tree
 void printAllPaths(MyTreeNode* root);
 
+// Given preorder and inorder of tree, rebuild the tree
+MyTreeNode* rebuild_tree(std::vector<int> &preorder, std::vector<int> &inorder);
+
+// Find least common ancestor
+MyTreeNode* find_LCA(MyTreeNode *root, MyTreeNode *n1, MyTreeNode *n2);
+
 #endif /* tree_hpp */

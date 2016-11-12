@@ -448,9 +448,66 @@ void printAllPaths(MyTreeNode* root) {
     printAllPaths(root, path);
 }
 
+int myfind(vector<int> &vec, int val, int st, int ed)
+{
+    for (int i=st; i<=ed; i++) {
+        if (vec[i] == val) {
+            return i;
+        }
+    }
+    
+    return -1;
+}
 
+MyTreeNode *rebuild_tree_recur(std::vector<int> &preorder, std::vector<int> &inorder, int st, int ed)
+{
+    static int i = 0;
+    if (st > ed) {
+        return NULL;
+    }
+    
+    MyTreeNode *node = new MyTreeNode(preorder[i]);
+    int index = myfind(inorder, node->value, st, ed);
+    node->left = rebuild_tree_recur(preorder, inorder, st, index-1);
+    node->right = rebuild_tree_recur(preorder, inorder, index+1, ed);
+    return node;
+}
 
+MyTreeNode* rebuild_tree(std::vector<int> &preorder, std::vector<int> &inorder)
+{
+    return rebuild_tree_recur(preorder, inorder, 0, preorder.size()-1);
+}
 
+// root is subtree's root recursively
+MyTreeNode* find_LCA(MyTreeNode *root, MyTreeNode *n1, MyTreeNode *n2)
+{
+    if (root == NULL) {
+        return NULL;
+    }
+    
+    if (root->value = n1->value || root->value == n2->value)
+        return root;
+    
+    MyTreeNode *left = find_LCA(root->left, n1, n2);
+    MyTreeNode *right = find_LCA(root->right, n1, n2);
+    // If we found both in this subtree's left and right, then root is the LCA
+    if (left && right) {
+        return root;
+    }
+    
+    // If the left has the node, we return left node
+    if (left) {
+        return left;
+    }
+    
+    if (right) {
+        return right;
+    }
+    
+    // We found nothing in this root's subtree, return NULL
+    return NULL;
+    
+}
 
 
 
