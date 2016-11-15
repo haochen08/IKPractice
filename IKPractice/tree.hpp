@@ -105,4 +105,7 @@ MyTreeNode* find_LCA(MyTreeNode *root, MyTreeNode *n1, MyTreeNode *n2);
 // Populate the right sibling in full binary tree
 void sibling_connect(MyTreeNode *node);
 
+// Given binary tree, find total number of subtree which has the same value
+bool findSingleValueTreesRecur(MyTreeNode *node, int &count);
+
 #endif /* tree_hpp */

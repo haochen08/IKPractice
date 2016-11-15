@@ -561,3 +561,37 @@ void sibling_connect(MyTreeNode *node)
     sibling_connect(node->left);
     sibling_connect(node->right);
 }
+
+bool findSingleValueTreesRecur(MyTreeNode *node, int &count) {
+    if (node == NULL) {
+        return true;
+    }
+    
+    bool isLeftValid = findSingleValueTreesRecur(node->left, count);
+    bool isRightValid = findSingleValueTreesRecur(node->right, count);
+    if (!isLeftValid || !isRightValid) {
+        return false;
+    }
+    
+    if (node->left && node->right && node->value == node->left->value && node->value == node->right->value) {
+        count++;
+        return true;
+    } else if (node->left && node->right == NULL && node->value == node->left->value) {
+        count++;
+        return true;
+    } else if (node->right && node->left == NULL && node->value == node->right->value) {
+        count++;
+        return true;
+    } else if (node->left == NULL && node->right == NULL) {
+        count++;
+        return true;
+    }
+    
+    return false;
+}
+
+int findSingleValueTrees(MyTreeNode* node) {
+    int count = 0;
+    findSingleValueTreesRecur(node, count);
+    return count;
+}
