@@ -119,6 +119,28 @@ void tree_tests() {
     cout << endl;
     printTreeByLevel(root);
     
+    cout << "Test tree iterator" << endl;
+    MyTreeNodeIterator *it = new MyTreeNodeIterator(root);
+    while (it->hasNext()) {
+        MyTreeNode *n = it->next();
+        cout << n->value << " ";
+    }
+    cout << endl;
+    
+    cout << "Populate Sibling " << endl;
+    sibling_connect(root);
+    MyTreeNode *q = root;
+    cout << root->value << endl;
+    while (q) {
+        MyTreeNode *p = q->left;
+        while (p) {
+            cout << p->value << " ";
+            p = p->nextSibling;
+        }
+        cout << endl;
+        q = q->left;
+    }
+    
     MyKTreeNode *node = new MyKTreeNode(0);
     node->children[0] = new MyKTreeNode(5);
     node->children[1] = new MyKTreeNode(5);
@@ -135,6 +157,10 @@ void tree_tests() {
     cout << "Diameter = " << diameter_of_ktree(node) << endl;
     cout << "Distance = " << distance_of_ktree(node) << endl;
     cout << "Diameter weighted = " << diameter_of_weighted_ktree(node) << endl;
+    
+    cout << "Largest BST:" ;
+    MyTreeNode *node1 = new MyTreeNode(1);
+    cout << largest_BST(node1) << endl;
 }
 
 void recursive_tests() {
@@ -201,7 +227,7 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    graph_test();
+    tree_tests();
 
     return 0;
 }

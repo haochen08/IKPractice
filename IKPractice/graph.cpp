@@ -55,13 +55,13 @@ void MyGraph::print()
     }
 }
 
-void dfs_recur(MyGraph *g, MyVertex *v)
+void dfs_recur(MyVertex *v)
 {
     cout << v->label << " ";
     for (MyVertex *n: v->neighbors) {
         if (!n->visited) {
             n->visited = true;
-            dfs_recur(g, n);
+            dfs_recur(n);
         }
     }
 }
@@ -71,7 +71,7 @@ void dfs(MyGraph *g)
     for (MyVertex *v:g->adjacent_list) {
         if (!v->visited) {
             v->visited = true;
-            dfs_recur(g, v);
+            dfs_recur(v);
         }
     }
     

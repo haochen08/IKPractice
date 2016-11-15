@@ -15,14 +15,24 @@
 
 class MyTreeNode {
 public:
-    MyTreeNode *left, *right;
+    MyTreeNode *left, *right, *nextSibling;
     int value;
-    int level;
-    MyTreeNode(int _value, int _level):left(NULL), right(NULL), value(_value), level(_level) {}
-    MyTreeNode(int _value)
-    {
-        MyTreeNode(_value, -1);
-    }
+    MyTreeNode(int _value):left(NULL), right(NULL), nextSibling(NULL), value(_value){}
+//    MyTreeNode(int _value)
+//    {
+//        MyTreeNode(_value, -1);
+//    }
+};
+
+class MyTreeNodeIterator {
+public:
+    MyTreeNodeIterator(MyTreeNode *root);
+    bool hasNext();
+    MyTreeNode *next();
+    
+private:
+    std::stack<MyTreeNode *> nodeStack;
+    void pushAlongLeftEdge(MyTreeNode *node);
 };
 
 class MyKTreeNode {
@@ -80,6 +90,9 @@ MyTreeNode* flip_tree(MyTreeNode *node);
 
 bool is_BST(MyTreeNode *node);
 
+// Find the number of nodes of largest BST in given binary tree
+int largest_BST(MyTreeNode *root);
+
 // print all paths for Binary Tree
 void printAllPaths(MyTreeNode* root);
 
@@ -88,5 +101,8 @@ MyTreeNode* rebuild_tree(std::vector<int> &preorder, std::vector<int> &inorder);
 
 // Find least common ancestor
 MyTreeNode* find_LCA(MyTreeNode *root, MyTreeNode *n1, MyTreeNode *n2);
+
+// Populate the right sibling in full binary tree
+void sibling_connect(MyTreeNode *node);
 
 #endif /* tree_hpp */

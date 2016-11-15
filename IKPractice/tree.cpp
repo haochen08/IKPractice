@@ -13,6 +13,31 @@
 
 using namespace std;
 
+// start impl of MyTreeNodeIterator
+MyTreeNodeIterator::MyTreeNodeIterator(MyTreeNode *root) {
+    this->pushAlongLeftEdge(root);
+}
+
+bool MyTreeNodeIterator::hasNext() {
+    return !this->nodeStack.empty();
+}
+
+MyTreeNode* MyTreeNodeIterator::next() {
+    MyTreeNode *cur = this->nodeStack.top();
+    this->nodeStack.pop();
+    MyTreeNode *n = cur->right;
+    this->pushAlongLeftEdge(n);
+    return cur;
+}
+
+void MyTreeNodeIterator::pushAlongLeftEdge(MyTreeNode *node) {
+    while (node) {
+        this->nodeStack.push(node);
+        node = node->left;
+    }
+}
+// End impl of MyTreeNodeIterator
+
 
 MyTreeNode *insert_nodes_to_tree(vector<int> nodes)
 {
@@ -153,36 +178,6 @@ void postorder_iter(MyTreeNode *root)
     }
 }
 
-void bfs_travse(MyTreeNode *root)
-{
-    if (root == NULL) {
-        return;
-    }
-    
-    deque<MyTreeNode *> queue;
-    queue.push_back(root);
-    int level = 0;
-    while (!queue.empty()) {
-        MyTreeNode *node = queue.front();
-        if (node->level > level) {
-            level = node->level;
-            cout << endl;
-        }
-        
-        cout << node->value << ",";
-
-        if (node->left) {
-            queue.push_back(node->left);
-        }
-        
-        if (node->right) {
-            queue.push_back(node->right);
-        }
-        
-        queue.pop_front();
-    }
-}
-
 void printTreeByLevel(MyTreeNode *n)
 {
     if (n == NULL)
@@ -234,22 +229,22 @@ void remove_node_in_BST(MyTreeNode *node)
     
 }
 
-MyTreeNode *createBST(std::vector<int> &array, int st, int ed, int level)
+MyTreeNode *createBST(std::vector<int> &array, int st, int ed)
 {
     if (st > ed) {
         return NULL;
     }
     int mid = st + (ed-st) / 2;
-    MyTreeNode *node = new MyTreeNode(array[mid], level);
-    node->left = createBST(array, st, mid-1, level+1);
-    node->right = createBST(array, mid+1, ed, level+1);
+    MyTreeNode *node = new MyTreeNode(array[mid]);
+    node->left = createBST(array, st, mid-1);
+    node->right = createBST(array, mid+1, ed);
     
     return node;
 }
 
 MyTreeNode *createBST(std::vector<int> array)
 {
-    return createBST(array, 0, (int)array.size()-1, 0);
+    return createBST(array, 0, (int)array.size()-1);
 }
 
 
@@ -426,6 +421,48 @@ bool is_BST(MyTreeNode *node)
     return is_BSTInOrder(node, prev);
 }
 
+int largest_BST_recur(MyTreeNode *node, int &min, int &max, bool &isBST, int &maxBSTNo) {
+    min = INT_MAX;
+    max = INT_MIN;
+    if (!node) {
+        isBST = true;
+        return 0;
+    }
+    
+    int tpMin, tpMax;
+    tpMin = tpMax = node->value;
+    int left_no = largest_BST_recur(node->left, min, max, isBST, maxBSTNo);
+    bool isLeftBST = isBST && node->value >= max;
+    tpMin = (min < tpMin) ? min : tpMin;
+    tpMax = (max > tpMax) ? max : tpMax;
+    int right_no = largest_BST_recur(node->right, min, max, isBST, maxBSTNo);
+    bool isRightBST = isBST && node->value <= min;
+    min = (tpMin < min) ? tpMin: min;
+    max = (tpMax > max) ? tpMax: max;
+    if (isLeftBST && isRightBST) {
+        int cur = left_no + right_no+1;
+        if (cur > maxBSTNo) {
+            maxBSTNo = cur;
+        }
+        
+        isBST = true;
+        return cur;
+    }
+    
+    isBST = false;
+    return -1;
+}
+
+int largest_BST(MyTreeNode *root)
+{
+    int min;
+    int max;
+    int max_bst_no = INT_MIN;
+    bool isBST;
+    largest_BST_recur(root, min, max, isBST, max_bst_no);
+    return max_bst_no;
+}
+
 void printAllPaths(MyTreeNode *node, vector<int> &path) {
     if (node == NULL)
         return;
@@ -485,7 +522,7 @@ MyTreeNode* find_LCA(MyTreeNode *root, MyTreeNode *n1, MyTreeNode *n2)
         return NULL;
     }
     
-    if (root->value = n1->value || root->value == n2->value)
+    if (root->value == n1->value || root->value == n2->value)
         return root;
     
     MyTreeNode *left = find_LCA(root->left, n1, n2);
@@ -506,11 +543,21 @@ MyTreeNode* find_LCA(MyTreeNode *root, MyTreeNode *n1, MyTreeNode *n2)
     
     // We found nothing in this root's subtree, return NULL
     return NULL;
-    
 }
 
-
-
-
-
-
+void sibling_connect(MyTreeNode *node)
+{
+    if (!node)
+        return;
+    
+    if (node->left) {
+        node->left->nextSibling = node->right;
+    }
+    
+    if (node->right) {
+        node->right->nextSibling = node->nextSibling ? node->nextSibling->left : NULL;
+    }
+                                    
+    sibling_connect(node->left);
+    sibling_connect(node->right);
+}
