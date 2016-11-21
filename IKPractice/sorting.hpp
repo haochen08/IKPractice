@@ -29,9 +29,13 @@ public:
 
 std::vector<int> quick_sort_k(std::vector<int> &elements, uint low, uint high, uint k);
 std::vector<point> quick_sort_k_nearest(std::vector<point> &elements, uint low, uint high, point pt, uint k);
+
+// Tag: quick_select, swap， DutchFlagSort(Threeway sort)
 void quick_sort(std::vector<int> &elements, uint low, uint high);
 void merge_sort(std::vector<int> &elements, uint low, uint high);
 void heap_sort(std::vector<int> &elements);
+
+// T: O(n) when using headpify_down, O(nlogn) using heapify_up, S: O(1)
 void heap_insert(std::vector<int> &heap, int i);
 void heap_insert(std::vector<heap_node> &heap, heap_node node);
 

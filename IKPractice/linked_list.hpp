@@ -27,5 +27,8 @@ int find_intersection(MyLinkedList *l1, MyLinkedList *l2);
 // Find the start point of linked list
 int find_median(MyLinkedList *p);
 
+MyLinkedList *reverse_linkedlist(MyLinkedList *h);
+
+
 
 #endif /* linked_list_hpp */

@@ -42,3 +42,24 @@ int find_intersection(MyLinkedList *l1, MyLinkedList *l2)
     
     return cnt;
 }
+
+MyLinkedList *reverse_linkedlist_recur(MyLinkedList *node)
+{
+    MyLinkedList *h;
+    if (node->next == NULL)
+        return node;
+    h = reverse_linkedlist(node->next);
+    node->next->next = node;
+    node->next = NULL;
+    return h;
+}
+
+
+MyLinkedList *reverse_linkedlist(MyLinkedList *h)
+{
+    if (h == NULL || h->next == NULL) {
+        return h;
+    }
+    
+    return reverse_linkedlist_recur(h);
+}

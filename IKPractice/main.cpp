@@ -177,6 +177,11 @@ void recursive_tests() {
     string s = "12345";
     vector<char> expr;
     addOperators(s, expr, 0, 12345);
+    
+    cout << "Permutation(N): N=5" << endl;
+    permutation(5);
+    cout << "NQueen(N): N=5" << endl;
+    NQueen(5);
 }
 
 void dp_test() {
@@ -208,12 +213,24 @@ void hanoi(int n, int source, int target, int middle) {
 }
 
 void linked_list_test() {
-
-    
+    MyLinkedList *n1 = new MyLinkedList(0);
+    MyLinkedList *n2 = new MyLinkedList(1);
+    MyLinkedList *n3 = new MyLinkedList(2);
+    MyLinkedList *n4 = new MyLinkedList(3);
+    n1->next = n2; n2->next = n3;
+    n3->next = n4;
+    MyLinkedList *h = n1;
+    cout << "Reverse linked list ---" << endl;
+    h = reverse_linkedlist(h);
+    MyLinkedList *p = h;
+    while (p != NULL) {
+        cout << p->val << " ";
+        p = p->next;
+    }
+    cout << endl;
 }
 
 void graph_test() {
-    
     vector<int> labels = {0,1,2,3};
     MyGraph g(labels);
     g.addEdge(0, 1);
@@ -227,7 +244,7 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    tree_tests();
+    recursive_tests();
 
     return 0;
 }

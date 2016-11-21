@@ -11,6 +11,24 @@
 
 #include <string>
 
+
+// How to analyze the time complexiy of recursion problem
+// 1. T(n) = T(n/2)
+// O(logn)
+// e.g. Binary search, heap_siftDown
+// 2. T(n) = T(n-1)
+// O(n)
+// e.g. Reverse linked list, Factor(n), build_heap...
+// 3. T(n) = 2T(n/2)
+// O(nlogn)
+// e.g. Quick sort
+// 4. T(n) = kT(n-1)
+// O(k^n)
+// e.g. generateParenthese, subset  
+// 5. T(n) = nT(n-1)
+// O(n!)
+// e.g. Permutation
+
 bool isPalindrome(std::string s);
 
 //--------------- 9/22/2016-----------------
@@ -53,5 +71,7 @@ void palindromeDecomp(std::string &a);
 // Raise a double to an int power including negative powers
 float pow(float dblbase, int ipower);
 
-void printNQueen(int N);
+void permutation(int N);
+
+void NQueen(int N);
 #endif /* recursion_hpp */

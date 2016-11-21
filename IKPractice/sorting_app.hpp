@@ -14,6 +14,6 @@
 
 std::vector<int> k_merge_sort(std::vector<std::vector<int>> &a, uint k);
 
-
+// Tag: unstable, 3-way select
 std::string DutchFlagSort(std::string strColoredBalls);
 #endif /* sorting_app_hpp */

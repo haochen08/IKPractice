@@ -247,7 +247,7 @@ MyTreeNode *createBST(std::vector<int> array)
     return createBST(array, 0, (int)array.size()-1);
 }
 
-
+// T(n) = KT(n/k)+o(1) => O(n)
 int height_of_ktree(MyKTreeNode *root)
 {
     if (root == NULL) {
@@ -289,7 +289,7 @@ int distance_of_ktree(MyKTreeNode *root)
     return max;
 }
 
-
+// T(n) = 2KT(n/k)+O(1) =
 int diameter_of_ktree(MyKTreeNode *root)
 {
     if (root == NULL) {
