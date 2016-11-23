@@ -348,6 +348,7 @@ void printQueenSolution(int a[], int N)
     cout << "+" <<endl;
 }
 
+
 //T(n) = nT(n-1)
 // T: n!
 void permutation_recur(int a[], int N, int level)
@@ -380,20 +381,32 @@ bool valid(int a[], int N)
     return true;
 }
 
-void NQueen_recur(int a[], int N, int level)
+bool canPlace(int a[], int col)
+{
+    for (int i=0; i<col; i++) {
+        if (abs(a[col]-a[i]) == (col-i)) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+void NQueen_recur(int a[], int N, int level, int &sol_num)
 {
     if (level == N) {
-        if (valid(a, N)) {
-            printQueenSolution(a, N);
-            cout << endl;
-        }
-
+        //printQueenSolution(a, N);
+        //cout << endl;
+        sol_num++;
         return;
     }
     
     for (int i = level; i < N; i++) {
         swap(a[level], a[i]);
-        NQueen_recur(a, N, level+1);
+        if (canPlace(a, level)) {
+            NQueen_recur(a, N, level+1, sol_num);
+        }
+        
         swap(a[level], a[i]);
     }
 }
@@ -408,14 +421,15 @@ void permutation(int N)
     permutation_recur(a, N, 0);
 }
 
-void NQueen(int N)
+int NQueen(int N)
 {
-    int a[N];
+    int a[N], sol_num=0;
     for (int i = 0; i < N; i++) {
         a[i] = i;
     }
     
-    NQueen_recur(a, N, 0);
+    NQueen_recur(a, N, 0, sol_num);
+    return sol_num;
 }
 
 bool binarySearchRecur(vector<int> a, int x, int st, int ed)

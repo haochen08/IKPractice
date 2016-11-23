@@ -180,12 +180,9 @@ void recursive_tests() {
     
     cout << "Permutation(N): N=5" << endl;
     permutation(5);
-    cout << "NQueen(N): N=5" << endl;
-    NQueen(5);
-    
-    a = {1,3,5,6,7,8,9,12};
-    for (int i=0; i<13; i++)
-    cout << i << " exist=" << binarySearch(a, i) << endl;
+
+    cout << "NQueen(14): Number of solutions=" << NQueen(14) << endl;
+
 }
 
 void dp_test() {
