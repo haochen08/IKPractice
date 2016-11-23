@@ -74,4 +74,9 @@ float pow(float dblbase, int ipower);
 void permutation(int N);
 
 void NQueen(int N);
+
+bool binarySearch(std::vector<int> a, int x);
+
+// find if x exists in pivot rotate sorted array like {3,4,5,1,2} pivot = 5
+bool rotatedBinarySearch(std::vector<int> a, int x);
 #endif /* recursion_hpp */

@@ -418,6 +418,71 @@ void NQueen(int N)
     NQueen_recur(a, N, 0);
 }
 
+bool binarySearchRecur(vector<int> a, int x, int st, int ed)
+{
+    if (st > ed) {
+        return false;
+    }
+    
+    int mid = st+(ed-st)/2;
+    if (x == a[mid]) {
+        return true;
+    }
+    
+    if (x > a[mid]) {
+        return binarySearchRecur(a, x, mid+1, ed);
+    } else {
+        return binarySearchRecur(a, x, st, mid-1);
+    }
+}
+
+bool binarySearch(vector<int> a, int x)
+{
+    return binarySearchRecur(a, x, 0, (int)a.size()-1);
+}
+
+int findPivot(vector<int> a, int st, int ed)
+{
+    // If cross, means there is not any pivot
+    if (st > ed) {
+        return -1;
+    }
+    
+    // if privot is among mid, mid-1 and mid+1, just return
+    int mid = st+(ed-st)/2;
+    if (mid > st && a[mid] < a[mid-1]) {
+        return mid-1;
+    }
+    
+    if (mid < ed && a[mid] > a[mid+1]) {
+        return mid;
+    }
+    
+    // Otherwise divide and conque
+    if (a[mid] > a[st]) {
+        return findPivot(a, mid+1, ed);
+    }
+    
+    return findPivot(a, st, mid-1);
+}
+
+bool rotatedBinarySearch(vector<int> a, int x)
+{
+    int id = findPivot(a, 0, a.size()-1);
+    if (id == -1) {
+        return binarySearchRecur(a, x, 0, (int)a.size()-1);
+    }
+    
+    if (x == a[id]) {
+        return true;
+    }
+    
+    if (x > a[0]) {
+        return binarySearchRecur(a, x, 0, id-1);
+    }
+    
+    return binarySearchRecur(a, x, id+1, a.size()-1);
+}
 
 
 
