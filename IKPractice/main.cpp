@@ -181,7 +181,12 @@ void recursive_tests() {
     cout << "Permutation(N): N=5" << endl;
     permutation(5);
 
-    cout << "NQueen(14): Number of solutions=" << NQueen(14) << endl;
+    cout << "NQueen(8): Number of solutions=" << NQueen(8) << endl;
+    
+    a = {4,5,6,7,1,2};
+    for (int i=0; i<a.size(); i++) {
+        cout << i << "exists = " << rotatedBinarySearch2(a, i, 0, a.size()-1) << endl;
+    }
 
 }
 

@@ -368,6 +368,36 @@ void permutation_recur(int a[], int N, int level)
     }
 }
 
+// Note here it is pass by value for seq
+void permutation_dup_recur(vector<int> seq, int level, vector<vector<int>> & output)
+{
+    if (level == seq.size()) {
+        output.push_back(seq);
+        return;
+    }
+    
+    for (int i=level; i<seq.size(); i++) {
+        // skip dup
+        if (i != level && seq[i] == seq[level])
+            continue;
+        
+        swap(seq[i], seq[level]);
+        permutation_dup_recur(seq, level+1, output);
+        // No swap back since we want to maintain the subseq [level+1, n-1] is still sorted
+        // Otherwise we can will have a same subset as before.
+        // Example is 1 2 2 3
+        // when swap (level=0, i=1)
+        // it is 2 1 2 3
+        // If we swap back and process (level=0, i=2)
+        // it is 2 2 1 3.
+        // Then the subset [1,2,3] is the same as [2,1,3].
+        // which will yield a dup output
+        // However if we don't swap back, it will skip since seq[level=0] == seq[i=2] = 2
+        // Meanwhile since we can't swap back, we have to use pass by value
+        
+    }
+}
+
 bool valid(int a[], int N)
 {
     for (int i=0; i<N-1; i++) {
@@ -421,6 +451,17 @@ void permutation(int N)
     permutation_recur(a, N, 0);
 }
 
+
+
+std::vector<std::vector<int>> permutationOnDup(std::vector<int> &nums)
+{
+    vector<vector<int>> output;
+    // sort is necessary to skip dup
+    sort(nums.begin(), nums.end());
+    permutation_dup_recur(nums, 0, output);
+    return output;
+}
+
 int NQueen(int N)
 {
     int a[N], sol_num=0;
@@ -462,8 +503,15 @@ int findPivot(vector<int> a, int st, int ed)
         return -1;
     }
     
-    // if privot is among mid, mid-1 and mid+1, just return
     int mid = st+(ed-st)/2;
+    // solve for duplicate
+    // Note we should decrement from ed instead of st
+    // Think about 3 1 3 3 3. If we decrement from st, then we'll miss the pivot 3.
+    if (mid < ed && a[mid] == a[ed]) {
+        return findPivot(a, st, ed-1);
+    }
+    
+    // if pivot is among mid, mid-1 and mid+1, just return
     if (mid > st && a[mid] < a[mid-1]) {
         return mid-1;
     }
@@ -472,14 +520,13 @@ int findPivot(vector<int> a, int st, int ed)
         return mid;
     }
     
-    // Otherwise divide and conque
-    if (a[mid] > a[st]) {
-        return findPivot(a, mid+1, ed);
+    // Otherwise divide and conquer
+    if (a[mid] < a[ed]) {
+        return findPivot(a, st, mid-1);
     }
     
-    return findPivot(a, st, mid-1);
+    return findPivot(a, mid+1, ed);
 }
-
 bool rotatedBinarySearch(vector<int> a, int x)
 {
     int id = findPivot(a, 0, a.size()-1);
@@ -496,6 +543,49 @@ bool rotatedBinarySearch(vector<int> a, int x)
     }
     
     return binarySearchRecur(a, x, id+1, a.size()-1);
+}
+
+bool rotatedBinarySearch2(vector<int> a, int x, int low, int high)
+{
+    if (low > high) {
+        return false;
+    }
+    
+    int mid = low + (high-low)/2;
+    if (x == a[mid]) {
+        return true;
+    }
+    
+    // a[mid] == a[low] if there is dup
+    // like 1 3 1 1 1, 1 1 1 3 1 (x = 3)
+    // we can only shrink by one from low
+    if (a[mid] == a[low]) {
+        return rotatedBinarySearch2(a, x, low+1, high);
+    }
+    
+    if (a[mid] > a[low]) {
+        if (x >= a[low] && x < a[mid]) {
+            return rotatedBinarySearch2(a, x, low, mid-1);
+        }
+        
+        return rotatedBinarySearch2(a, x, mid+1, high);
+    }
+    
+    if (x > a[mid] && x <= a[high]) {
+        return rotatedBinarySearch2(a, x, mid+1, high);
+    }
+    
+    return rotatedBinarySearch2(a, x, low, mid-1);
+}
+
+int minInRotatedSortArray(std::vector<int> a)
+{
+    int id = findPivot(a, 0, a.size()-1);
+    if (id == -1) {
+        return a[0];
+    }
+    
+    return a[id+1];
 }
 
 

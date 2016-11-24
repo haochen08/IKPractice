@@ -73,10 +73,17 @@ float pow(float dblbase, int ipower);
 
 void permutation(int N);
 
+// output perm from a seq which may contain dup e.g. {1,1,2}
+std::vector<std::vector<int>> permutationOnDup(std::vector<int> &nums);
+
 bool binarySearch(std::vector<int> a, int x);
 
 // find if x exists in pivot rotate sorted array like {3,4,5,1,2} pivot = 5
 bool rotatedBinarySearch(std::vector<int> a, int x);
+bool rotatedBinarySearch2(std::vector<int> a, int x, int low, int high);
+
+// find min in rotate sorted array like {3,4,5,1,2} pivot = 5 which is 1
+int minInRotatedSortArray(std::vector<int> a);
 
 // print solutions count for NQueen
 int NQueen(int N);
