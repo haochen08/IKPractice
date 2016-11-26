@@ -10,6 +10,8 @@
 #define ad_hoc_hpp
 
 #include <stdio.h>
+#include <vector>
+#include <string>
 
 // Given the array, shuffle the array so that every element is with equally likely
 // ? Random generator
@@ -19,8 +21,5 @@
 // T: N!
 // S: N*N!
 void shuffle_array_in_equally_likely(int a[], int m);
-
-// Merge the interval
-
 
 #endif /* ad_hoc_hpp */

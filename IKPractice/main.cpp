@@ -250,7 +250,18 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    recursive_tests();
-
+    vector<string> res = readBinaryWatch(2);
+    for (string s:res) {
+        cout << s << endl;
+    }
+    
+    vector<int> input = {1,2,2};
+    vector<vector<int>> res2 = subsetsWithDup(input);
+    for (vector<int> p: res2 ) {
+        for (int i:p) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
     return 0;
 }

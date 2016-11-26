@@ -36,6 +36,7 @@ bool isPalindrome(std::string s);
 // Input: Set
 // Output: All subset
 void subset(std::string &in, std::vector<char> &out, int read, int write);
+std::vector<std::vector<int>> subsetsWithDup(std::vector<int>& nums);
 
 // Problem
 // Input: count of tree nodes
@@ -54,6 +55,13 @@ void genBrackets(int n);
 // Return if sum of any elements equals to target
 bool groupSum(std::vector<int> &a, int i, int target);
 void groupSum2(std::vector<int> &a, int i, int target);
+
+// leetcode39
+std::vector<std::vector<int>> combinationSum1(std::vector<int>& candidates, int target);
+// leetcode40
+std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, int target);
+// leetcode 219
+std::vector<std::vector<int>> combinationSum3(int k, int n);
 
 // Problem
 // Input
@@ -87,5 +95,9 @@ int minInRotatedSortArray(std::vector<int> a);
 
 // print solutions count for NQueen
 int NQueen(int N);
+
+// Binary Watch leetcode 401
+std::vector<std::string> readBinaryWatch(int num);
+
 
 #endif /* recursion_hpp */

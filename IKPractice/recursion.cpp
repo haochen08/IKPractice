@@ -64,6 +64,35 @@ void subset(std::string &in, std::vector<char> &out, int read, int write)
     out[write-1] = '\0';
 }
 
+void subset(vector<int> &nums, int num, int level, vector<int> &sol, vector<vector<int>> &res)
+{
+    if (num == 0) {
+        res.push_back(sol);
+        return;
+    }
+    
+    for (int i=level; i<nums.size(); i++) {
+        if (i > level && nums[i] == nums[i-1]) {
+            continue;
+        }
+        sol.push_back(nums[i]);
+        subset(nums, num-1, i+1, sol, res);
+        sol.pop_back();
+    }
+}
+
+vector<vector<int>> subsetsWithDup(vector<int>& nums)
+{
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> res;
+    for (int i=0; i<=nums.size(); i++) {
+        vector<int> sol;
+        subset(nums, i, 0, sol, res);
+    }
+    
+    return res;
+}
+
 void addingBrackets(string str, int n, int m){
     if(n==0 && m==0) {
         cout << str <<endl;
@@ -162,6 +191,99 @@ bool groupSum(std::vector<int> &a, int i, int target)
     }
     
     return false;
+}
+
+void combinationSumRecur1(vector<int>& candidates, vector<int> &sol, int level, int target, vector<vector<int>> &res)
+{
+    if (target < 0) {
+        return;
+    }
+    
+    if (target == 0) {
+        res.push_back(sol);
+        return;
+    }
+    
+    if (level >= candidates.size()) {
+        return;
+    }
+    
+    combinationSumRecur1(candidates, sol, level+1, target, res);
+    
+    sol.push_back(candidates[level]);
+    if (target > candidates[level]) {
+        combinationSumRecur1(candidates, sol, level, target-candidates[level], res);
+    } else {
+        combinationSumRecur1(candidates, sol, level+1, target-candidates[level], res);
+    }
+    sol.pop_back();
+}
+
+vector<vector<int>> combinationSum1(vector<int>& candidates, int target) {
+    vector<vector<int>> res;
+    vector<int> sol;
+    combinationSumRecur1(candidates, sol, 0, target, res);
+    return res;
+    
+}
+
+void combinationSumRecur2(vector<int>& candidates, vector<int> &sol, int level, int target, vector<vector<int>> &res)
+{
+    if (target < 0) {
+        return;
+    }
+    
+    if (target == 0) {
+        res.push_back(sol);
+        return;
+    }
+    
+    if (level == candidates.size()) {
+        return;
+    }
+    
+    for (int i=level; i< candidates.size(); i++) {
+        if (i > level && candidates[i] == candidates[i-1])continue;
+        sol.push_back(candidates[i]);
+        combinationSumRecur2(candidates, sol, i+1, target-candidates[i], res);
+        sol.pop_back();
+    }
+}
+
+vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+    sort(candidates.begin(), candidates.end());
+    vector<vector<int>> res;
+    vector<int> sol;
+    combinationSumRecur2(candidates, sol, 0, target, res);
+    return res;
+    
+}
+
+void combinationSumRecur3(vector<int>& candidates, vector<int> &sol, int level, int target, int num, vector<vector<int>> &res)
+{
+    if (target < 0 || num < 0) {
+        return;
+    }
+    
+    if (target == 0 && num == 0) {
+        res.push_back(sol);
+        return;
+    }
+    
+    for (int i=level; i< candidates.size(); i++) {
+        sol.push_back(candidates[i]);
+        combinationSumRecur3(candidates, sol, i+1, target-candidates[i], num-1, res);
+        sol.pop_back();
+    }
+}
+
+vector<vector<int>> combinationSum3(int k, int n) {
+    vector<int> candidates={1,2,3,4,5,6,7,8,9};
+    vector<vector<int>> res;
+    vector<int> sol;
+    combinationSumRecur3(candidates, sol, 0, n, k, res);
+    return res;
+    
 }
 
 bool hasLowerOrSamePrecedence(char op1, char op2)
@@ -451,8 +573,6 @@ void permutation(int N)
     permutation_recur(a, N, 0);
 }
 
-
-
 std::vector<std::vector<int>> permutationOnDup(std::vector<int> &nums)
 {
     vector<vector<int>> output;
@@ -588,8 +708,51 @@ int minInRotatedSortArray(std::vector<int> a)
     return a[id+1];
 }
 
+// compute k-sum from nums
+// Tag: k-sum, k-combination
+// {1,2,3,4}
+void kSum(vector<int> &nums, int num, int level, int sum, vector<int> &res) {
+    if (num <= 0) {
+        res.push_back(sum);
+        return;
+    }
+    
+    for (int i=level; i<nums.size(); i++) {
+        kSum(nums, num-1, i+1, sum+nums[i], res);
+    }
+}
 
-
+std::vector<std::string> readBinaryWatch(int num)
+{
+    vector<string> res;
+    vector<int> hours = {1,2,4,8};
+    vector<int> mins = {1,2,4,8,16,32};
+    for (int i=0; i<=num; i++) {
+        vector<int> hours_sum, mins_sum;
+        kSum(hours, i, 0, 0, hours_sum);
+        kSum(mins, num-i, 0, 0, mins_sum);
+        for (int hour : hours_sum) {
+            if (hour > 12) {
+                continue;
+            }
+            for (int min : mins_sum) {
+                if (min > 60) {
+                    continue;
+                }
+                string hour_str = to_string(hour);
+                string min_str;
+                if (min < 10) {
+                    min_str = "0"+to_string(min);
+                } else {
+                    min_str = to_string(min);
+                }
+                res.push_back(hour_str+":"+min_str);
+            }
+        }
+    }
+    
+    return res;
+}
 
 
 

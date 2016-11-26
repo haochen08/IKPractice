@@ -7,6 +7,7 @@
 //
 
 #include <bitset>
+#include <list>
 #include "array_problem.hpp"
 
 using namespace std;
@@ -189,6 +190,69 @@ int find_one_missing_in_4bil_mem_limited(std::vector<uint> a)
     return find_one_missing_in_4bil_mem_limited_recursive(a, 0, bitmap);
 }
 
+// T: O(N), S: O(1)
+void nextPermutation(vector<int>& nums)
+{
+    int index = -1;
+    int N = nums.size();
+    for (int i=N-2; i>=0; i--) {
+        // < is a must to avoid going backward where there is any dup
+        if (nums[i] < nums[i+1]) {
+            index = i;
+            break;
+        }
+    }
+    
+    if (index == -1) {
+        reverse(nums.begin(), nums.end());
+        return;
+    }
+    
+    int index2 = -1;
+    for (int i=N-1; i>index; i--) {
+        if (nums[i] > nums[index]) {
+            index2 = i;
+            break;
+        }
+    }
+    swap(nums[index], nums[index2]);
+    reverse(nums.begin()+index+1, nums.end());
+}
+
+// T: O(n^2), S:O(n)
+string permAsSeq(int n, int k)
+{
+    vector<int> factorial_seq;
+    factorial_seq.push_back(1);
+    for (int i=1; i<=n; i++) {
+        int last = factorial_seq.back();
+        factorial_seq.push_back(last*i);
+    }
+    
+    if (k > factorial_seq[n]) {
+        return "";
+    }
+    
+    vector<int> seq;
+    for (int i=0; i<n; i++) {
+        seq.push_back(i+1);
+    }
+    
+
+    string s;
+    int index=0;
+    k--; // 1st -> order 0 in array index
+    // O(n^2)
+    for (int i=n-1; i>=0; i--) {
+        index = k/factorial_seq[i];
+        s += to_string(seq[index]);
+        // O(n)
+        remove(seq.begin(), seq.end(), seq[index]);
+        k = k % factorial_seq[i];
+    }
+
+    return s;
+}
 
 
 

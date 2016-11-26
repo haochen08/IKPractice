@@ -8,7 +8,10 @@
 
 #include "ad_hoc.hpp"
 
+using namespace std;
+
 void shuffle_array_in_equally_likely(int a[], int m)
 {
     
 }
+

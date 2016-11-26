@@ -11,6 +11,7 @@
 
 #include <sys/types.h>
 #include <vector>
+#include <string>
 #include "sorting.hpp"
 
 //--------------- 9/16/2016-----------------
@@ -59,5 +60,11 @@ int find_one_missing_in_4bil(std::vector<uint> a);
 // Same to above but
 // Condition: memory is not enough
 int find_one_missing_in_4bil_mem_limited(std::vector<uint> a);
+
+// It can handle dups like {1,1,2}
+void nextPermutation(std::vector<int>& nums);
+
+// Return kth perm sequence of n permutation sequences.
+std::string permAsSeq(int n, int k);
 
 #endif /* array_problem_hpp */
