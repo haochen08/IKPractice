@@ -218,23 +218,7 @@ void hanoi(int n, int source, int target, int middle) {
     
 }
 
-void linked_list_test() {
-    MyLinkedList *n1 = new MyLinkedList(0);
-    MyLinkedList *n2 = new MyLinkedList(1);
-    MyLinkedList *n3 = new MyLinkedList(2);
-    MyLinkedList *n4 = new MyLinkedList(3);
-    n1->next = n2; n2->next = n3;
-    n3->next = n4;
-    MyLinkedList *h = n1;
-    cout << "Reverse linked list ---" << endl;
-    h = reverse_linkedlist(h);
-    MyLinkedList *p = h;
-    while (p != NULL) {
-        cout << p->val << " ";
-        p = p->next;
-    }
-    cout << endl;
-}
+
 
 void graph_test() {
     vector<int> labels = {0,1,2,3};
@@ -249,7 +233,7 @@ void graph_test() {
     dfs(&g);
 }
 
-int main(int argc, const char * argv[]) {
+void string_tests() {
     vector<string> res = readBinaryWatch(2);
     for (string s:res) {
         cout << s << endl;
@@ -263,5 +247,23 @@ int main(int argc, const char * argv[]) {
         }
         cout << endl;
     }
+    
+    vector<vector<char>> board = {{'o','a', 'a','n'}, {'e','t','a','e'}, {'i','h','k','r'},{'i','f','l','v'}};
+    vector<string> words = {"oath","pea","eat","rain"};
+    res = findWords(board, words);
+    for (string s:res) {
+        cout << s << endl;
+    }
+    
+    cout << "pattern match = " << wordPattern("abba", "dog cat cat dog") << endl;
+    
+    res = generatePalindromes("abab");
+    for (string s:res) {
+        cout << s << endl;
+    }
+}
+
+int main(int argc, const char * argv[]) {
+    linkedlist_test();
     return 0;
 }

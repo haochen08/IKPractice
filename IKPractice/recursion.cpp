@@ -10,6 +10,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <map>
 #include "recursion.hpp"
 
 using namespace std;
@@ -72,6 +73,7 @@ void subset(vector<int> &nums, int num, int level, vector<int> &sol, vector<vect
     }
     
     for (int i=level; i<nums.size(); i++) {
+        // skip dups
         if (i > level && nums[i] == nums[i-1]) {
             continue;
         }
@@ -751,6 +753,89 @@ std::vector<std::string> readBinaryWatch(int num)
         }
     }
     
+    return res;
+}
+
+bool canPermutePalindrome(string s, map<char, int> &map) {
+    for (char c:s) {
+        if (map.find(c) == map.end()) {
+            map[c] = 1;
+        } else {
+            map[c]++;
+        }
+    }
+    
+    int odd_cnt = 0;
+    for (pair<char, int> p:map) {
+        if (p.second % 2 == 1) {
+            odd_cnt++;
+            if (odd_cnt > 1)
+                return false;
+        }
+    }
+    
+    return true;
+}
+
+bool isPalindromesRecur(string &s, int st, int ed) {
+    if (st >= ed) {
+        return true;
+    }
+    
+    return (s[st] == s[ed]) && isPalindromesRecur(s, st+1, ed-1);
+}
+
+bool isPalindromes(string &s)
+{
+    return isPalindromesRecur(s, 0, s.size()-1);
+}
+
+void generatePalindromesRecur(string s, string mid, int level, vector<string> &res) {
+    if (level == s.size()) {
+        // Add mid and another half in reverse order
+        string st = s+mid;
+        for (int i=s.size()-1; i>=0; i--) {
+            st = st+s[i];
+        }
+        res.push_back(st);
+        return;
+    }
+    
+    // This is exactly same as PermAsDup
+    for (int i=level; i<s.size(); i++) {
+        if (i>level && s[i] == s[level]) {
+            continue;
+        }
+        swap(s[i],s[level]);
+        generatePalindromesRecur(s, mid, level+1, res);
+    }
+}
+
+vector<string> generatePalindromes(string s) {
+    map<char, int> map;
+    if (!canPermutePalindrome(s, map)) {
+        return {};
+    }
+    
+    string half_s;
+    string mid = "";
+    for (pair<char, int> p:map) {
+        if (p.second % 2 == 1) {
+            mid = p.first;
+            // we should not continue here.
+            // Think about test case "aaa", mid = 'a' and the first half is still a.
+            // If we continue, first half will be ""
+            //continue;
+        }
+        for (int i=0; i<p.second/2; i++) {
+            half_s += p.first;
+        }
+    }
+    
+    vector<string> res;
+    // Since we use (order)map, no need to sort here.
+    //sort(half_s.begin(), half_s.end());
+    generatePalindromesRecur(half_s, mid, 0, res);
     return res;
 }
 

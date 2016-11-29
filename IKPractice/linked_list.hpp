@@ -11,24 +11,35 @@
 
 #include <stdio.h>
 
-class MyLinkedList {
+class MyLinkedListNode {
 public:
-    MyLinkedList *next;
+    MyLinkedListNode *next;
     int val;
-    MyLinkedList(int _val):next(NULL),val(_val) {}
+    MyLinkedListNode(int _val):next(NULL),val(_val) {}
 };
 
 
 // l1 or l2 may have loop
-int find_intersection(MyLinkedList *l1, MyLinkedList *l2);
+int find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2);
 
 // Given p points to arbitary pointer in sorted linkedlist,
 // return median
 // Find the start point of linked list
-int find_median(MyLinkedList *p);
+int find_median(MyLinkedListNode *p);
 
-MyLinkedList *reverse_linkedlist(MyLinkedList *h);
+MyLinkedListNode *reverse_linkedlist(MyLinkedListNode *h);
 
+MyLinkedListNode *buildLinkedListReverse(std::vector<int> &array);
+MyLinkedListNode *buildLinkedListRecur(std::vector<int> &array, int i);
+
+// Zip the linked list from both end
+// Zip 1-2-3-4-5-6 => 1-6-2-5-3-4
+MyLinkedListNode* zip(MyLinkedListNode* h);
+
+// opposite of zip
+MyLinkedListNode* unzip(MyLinkedListNode* h);
+
+void linkedlist_test();
 
 
 #endif /* linked_list_hpp */

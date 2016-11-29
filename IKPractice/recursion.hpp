@@ -54,13 +54,22 @@ void genBrackets(int n);
 // Output:
 // Return if sum of any elements equals to target
 bool groupSum(std::vector<int> &a, int i, int target);
-void groupSum2(std::vector<int> &a, int i, int target);
 
 // leetcode39
+// Given an array with all unique positive integers and a target,
+// return all the unique combinations which sums to target.
+// Each element can be used in unlimited times.
 std::vector<std::vector<int>> combinationSum1(std::vector<int>& candidates, int target);
 // leetcode40
+// Given an array with all positive integers (which could contain duplicates) and a target,
+// return all the unique combinations which sums to target.
+// Each element can be used only once.
+// @similar subset dups
 std::vector<std::vector<int>> combinationSum2(std::vector<int>& candidates, int target);
 // leetcode 219
+// Digit set {1..9}, choose k of them, return all unique combinations summing to n
+// Each element can be used only once.
+// @similar kSum, binary watch
 std::vector<std::vector<int>> combinationSum3(int k, int n);
 
 // Problem
@@ -98,6 +107,9 @@ int NQueen(int N);
 
 // Binary Watch leetcode 401
 std::vector<std::string> readBinaryWatch(int num);
+
+// Generate all Palindromes in Permutation
+std::vector<std::string> generatePalindromes(std::string s);
 
 
 #endif /* recursion_hpp */

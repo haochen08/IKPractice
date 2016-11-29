@@ -12,6 +12,22 @@
 #include <string>
 #include <vector>
 
-void split_strings(std::string s, std::vector<std::string> &string_list, std::string delimiter);
+class MyTrie {    
+public:
+    MyTrie *next[26];
+    std::string word;
+    MyTrie()
+    {
+        for (int i=0;i<26;i++) {
+            next[i] = NULL;
+        }
+        word = "";
+    }
+};
 
+MyTrie buildTrie(std::vector<std::string> dictionary);
+// leetcode 212
+std::vector<std::string> findWords(std::vector<std::vector<char>>& board, std::vector<std::string>& words);
+void split_strings(std::string s, std::vector<std::string> &string_list, std::string delimiter);
+bool wordPattern(std::string pattern, std::string str);
 #endif /* my_string_hpp */
