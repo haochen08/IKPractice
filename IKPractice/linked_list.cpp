@@ -131,13 +131,31 @@ MyLinkedListNode *weaveLinkedList(MyLinkedListNode *n1, MyLinkedListNode *n2, in
 }
 
 // 1-5-2-6-3-7-4-8 => 1-2-3-4  5-6-7-8
-void splitLinkedList(MyLinkedListNode *n, MyLinkedListNode **n1, MyLinkedListNode **n2)
+void splitLinkedList(MyLinkedListNode *h, MyLinkedListNode **n1)
 {
-    if (n == NULL) {
-        *n1 = NULL; *n2 = NULL;
+    if (h == NULL || h->next == NULL) {
+        *n1 = NULL;
+        return;
+    }
+
+    if (h->next->next == NULL) {
+        *n1 = h->next;
+        h->next = NULL;
         return;
     }
     
+    *n1 = h->next;
+    MyLinkedListNode *p, *q;
+    p = h; q = *n1;
+    while (p != NULL && q != NULL && q->next != NULL) {
+        MyLinkedListNode *tmp = q->next;
+        p->next = q->next;
+        q->next = q->next->next;
+        p = tmp;
+        q = q->next;
+    }
+    
+    p->next = NULL;
 }
 
 MyLinkedListNode* zip(MyLinkedListNode* pList) {
@@ -168,7 +186,19 @@ MyLinkedListNode* zip(MyLinkedListNode* pList) {
 
 MyLinkedListNode *unzip(MyLinkedListNode *h)
 {
-    return NULL;
+    if (h == NULL) {
+        return NULL;
+    }
+    
+    MyLinkedListNode *h2;
+    splitLinkedList(h, &h2);
+    h2 = reverse_linkedlist(h2);
+    MyLinkedListNode *p = h;
+    while (p->next != NULL) {
+        p = p->next;
+    }
+    p->next = h2;
+    return h;
 }
 
 void linkedlist_test()
@@ -191,9 +221,13 @@ void linkedlist_test()
     h = reverse_linkedlist(h);
     printLinkedList(h);
     
-    vector<int> b = {6,7,8};
-    MyLinkedListNode *h2 = buildLinkedListRecur(b, 0);
+    h = zip(h);
+    cout << "Zip h ---" << endl;
+    printLinkedList(h);
+    h = unzip(h);
+    cout << "Unzip h ---" << endl;
+    printLinkedList(h);
     
-    printLinkedList(weaveLinkedList(h, h2, 0));
+
     
 }
