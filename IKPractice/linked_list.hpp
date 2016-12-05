@@ -28,6 +28,7 @@ int find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2);
 int find_median(MyLinkedListNode *p);
 
 MyLinkedListNode *reverse_linkedlist(MyLinkedListNode *h);
+MyLinkedListNode *reverseLinkedlistInGroup(MyLinkedListNode *h, int k);
 
 MyLinkedListNode *buildLinkedListReverse(std::vector<int> &array);
 MyLinkedListNode *buildLinkedListRecur(std::vector<int> &array, int i);

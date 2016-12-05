@@ -46,17 +46,20 @@ int find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2)
     return cnt;
 }
 
+
+// 1->2(Node)->3(->NULL)<-4<-5(h)
+// 1->2-><-3<-4<-5(h)
+// 1->2(->NULL)<-3<-4<-5(h)
 MyLinkedListNode *reverse_linkedlist_recur(MyLinkedListNode *node)
 {
     MyLinkedListNode *h;
     if (node->next == NULL)
         return node;
-    h = reverse_linkedlist(node->next);
+    h = reverse_linkedlist_recur(node->next);
     node->next->next = node;
     node->next = NULL;
     return h;
 }
-
 
 MyLinkedListNode *reverse_linkedlist(MyLinkedListNode *h)
 {
@@ -65,6 +68,32 @@ MyLinkedListNode *reverse_linkedlist(MyLinkedListNode *h)
     }
     
     return reverse_linkedlist_recur(h);
+}
+
+
+MyLinkedListNode *reverseLinkedlistInGroup(MyLinkedListNode *h, int k)
+{
+    if (k == 1 || h->next == NULL) {
+        return h;
+    }
+    
+    MyLinkedListNode *prev, *current, *next;
+    current = h;
+    prev = next = NULL;
+    int cnt = 0;
+    while (current != NULL && cnt < k) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+        cnt++;
+    }
+    
+    if (next) {
+        h->next = reverseLinkedlistInGroup(next, k);
+    }
+    
+    return prev;
 }
 
 MyLinkedListNode *insert(MyLinkedListNode *h, int a)
@@ -219,6 +248,9 @@ void linkedlist_test()
     
     cout << "Reverse linked list ---" << endl;
     h = reverse_linkedlist(h);
+    printLinkedList(h);
+    
+    h = reverseLinkedlistInGroup(h, 2);
     printLinkedList(h);
     
     h = zip(h);
