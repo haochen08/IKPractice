@@ -77,20 +77,20 @@ MyLinkedListNode *reverseLinkedlistInGroup(MyLinkedListNode *h, int k)
         return h;
     }
     
-    MyLinkedListNode *prev, *current, *next;
+    MyLinkedListNode *prev, *current, *tp;
     current = h;
-    prev = next = NULL;
+    prev = tp = NULL;
     int cnt = 0;
     while (current != NULL && cnt < k) {
-        next = current->next;
+        tp = current->next;
         current->next = prev;
         prev = current;
-        current = next;
+        current = tp;
         cnt++;
     }
     
-    if (next) {
-        h->next = reverseLinkedlistInGroup(next, k);
+    if (current) {
+        h->next = reverseLinkedlistInGroup(current, k);
     }
     
     return prev;

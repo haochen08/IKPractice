@@ -12,6 +12,7 @@
 #include <stack>
 #include <map>
 #include "recursion.hpp"
+#include "dp.hpp"
 
 using namespace std;
 
@@ -839,9 +840,64 @@ vector<string> generatePalindromes(string s) {
     return res;
 }
 
+int find_max_path_recur(std::vector<std::vector<int>> &a, int i, int j)
+{
+    if (i == a.size()-1 && j == a[0].size()-1) {
+        return a[i][j];
+    }
+    
+    if (i == a.size()-1) {
+        return find_max_path_recur(a, i, j+1)+a[i][j];
+    }
+    
+    if (j == a[0].size()-1) {
+        return find_max_path_recur(a, i+1, j)+a[i][j];
+    }
 
+    int right = find_max_path_recur(a, i, j+1) + a[i][j];
+    int down = find_max_path_recur(a, i+1, j) + a[i][j];
+    return right > down ? right : down;
+}
 
+int find_min_path_in_triangle_recur(std::vector<std::vector<int>> &a, int i, int j)
+{
+    if (i == a.size()-1) {
+        return a[i][j];
+    }
+    
+    int left = find_min_path_in_triangle_recur(a, i+1, j)+a[i][j];
+    int right = find_min_path_in_triangle_recur(a, i+1, j+1)+a[i][j];
+    return min(left, right);
+}
 
+void recursive_tests() {
+    cout << "()=3" << endl;
+    genBrackets(2);
+    cout << "Tree count number is " << countTreesNum(3) << endl;
+    vector<int> a = {-1,3,-4,5,6,7};
+    if (groupSum(a, 0, 4)) {
+        cout << "Found sum to target " << endl;
+    } else {
+        cout << "Not found sum to target " << endl;
+    }
+    
+    string s = "12345";
+    vector<char> expr;
+    addOperators(s, expr, 0, 12345);
+    
+    cout << "NQueen(8): Number of solutions=" << NQueen(8) << endl;
+    
+    a = {4,5,6,7,1,2};
+    for (int i=0; i<a.size(); i++) {
+        cout << i << "exists = " << rotatedBinarySearch2(a, i, 0, a.size()-1) << endl;
+    }
+    
+    vector<vector<int>> b = {{1,2,1,5}, {0,3,1,1}, {1,2,1,3}};
+    cout << "Matrix(M,N) max sum =" << find_max_path_recur(b, 0, 0) << endl;
+    b = {{2},{3,4},{6,5,7},{4,1,8,3}};
+    cout << "Min path sum in triangle(4) = " << find_min_path_in_triangle_recur(b, 0, 0) << endl;
+    cout << "Min path sum in triangle(4) = " << find_min_path_in_triangle(b) << endl;
+}
 
 
 

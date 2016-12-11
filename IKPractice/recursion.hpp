@@ -111,5 +111,10 @@ std::vector<std::string> readBinaryWatch(int num);
 // Generate all Palindromes in Permutation
 std::vector<std::string> generatePalindromes(std::string s);
 
+int find_max_path_recur(std::vector<std::vector<int>> &a, int i, int j);
+
+int find_min_path_in_triangle_recur(std::vector<std::vector<int>> &a, int i, int j);
+
+void recursive_tests();
 
 #endif /* recursion_hpp */

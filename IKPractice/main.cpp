@@ -163,32 +163,7 @@ void tree_tests() {
     cout << largest_BST(node1) << endl;
 }
 
-void recursive_tests() {
-    cout << "()=3" << endl;
-    genBrackets(2);
-    cout << "Tree count number is " << countTreesNum(3) << endl;
-    vector<int> a = {-1,3,-4,5,6,7};
-    if (groupSum(a, 0, 4)) {
-        cout << "Found sum to target " << endl;
-    } else {
-        cout << "Not found sum to target " << endl;
-    }
-    
-    string s = "12345";
-    vector<char> expr;
-    addOperators(s, expr, 0, 12345);
-    
-    cout << "Permutation(N): N=5" << endl;
-    permutation(5);
 
-    cout << "NQueen(8): Number of solutions=" << NQueen(8) << endl;
-    
-    a = {4,5,6,7,1,2};
-    for (int i=0; i<a.size(); i++) {
-        cout << i << "exists = " << rotatedBinarySearch2(a, i, 0, a.size()-1) << endl;
-    }
-
-}
 
 void dp_test() {
     vector<int> dem = {1,11,13};
@@ -264,6 +239,6 @@ void string_tests() {
 }
 
 int main(int argc, const char * argv[]) {
-    linkedlist_test();
+    recursive_tests();
     return 0;
 }

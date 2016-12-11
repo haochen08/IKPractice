@@ -25,6 +25,7 @@ public:
     }
 };
 
+void rotateString(std::string &s);
 MyTrie buildTrie(std::vector<std::string> dictionary);
 // leetcode 212
 std::vector<std::string> findWords(std::vector<std::vector<char>>& board, std::vector<std::string>& words);

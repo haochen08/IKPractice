@@ -11,6 +11,17 @@
 
 using namespace std;
 
+
+void rotateString(string &s)
+{
+    char tp = s[0];
+    int i=0;
+    for (i=0; i<s.length()-1; i++) {
+        s[i] = s[i+1];
+    }
+    s[i] = tp;
+}
+
 void buildTrie(std::vector<std::string> &dictionary, MyTrie &trie)
 {
     for (string s:dictionary) {

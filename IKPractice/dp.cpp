@@ -65,17 +65,18 @@ int coinchange(int amount, std::vector<int> &denom)
     return cache[amount];
 }
 
-int find_max_path(int x[10][10])
+int find_max_path(std::vector<std::vector<int>> x)
 {
-    int cache[10][10];
-    memset(cache, 0, sizeof(int)*100);
-    for (int i=9; i>=0; i--) {
-        for (int j=9; j>=10; j--) {
-            if (i == 9 && j == 9) {
+    int M = x.size(), N = x[0].size();
+    int cache[M][N];
+    memset(cache, 0, sizeof(int)*M*N);
+    for (int i=M-1; i>=0; i--) {
+        for (int j=N-1; j>=0; j--) {
+            if (i == M-1 && j == N-1) {
                 cache[i][j] = x[i][j];
-            } else if (i == 9) {
+            } else if (i == M-1) {
                 cache[i][j] = x[i][j] + cache[i][j+1];
-            } else if (j == 9) {
+            } else if (j == N-1) {
                 cache[i][j] = x[i][j] + cache[i+1][j];
             } else {
                 int down = x[i][j] + cache[i][j+1];
@@ -87,12 +88,13 @@ int find_max_path(int x[10][10])
     
     // print path
     int i=0,j=0,sum=cache[0][0];
+    cout <<"0,0" << endl;
     while (true) {
-        if (i == 9 && j == 9) {
+        if (i == M-1 && j == N-1) {
             break;
-        } else if (i == 9){
+        } else if (i == M-1){
             j++;
-        } else if (j == 9) {
+        } else if (j == N-1) {
             i++;
         } else {
             sum -= x[i][j];
@@ -106,8 +108,6 @@ int find_max_path(int x[10][10])
         cout << i << "," << j << endl;
         
     }
-        
-    cout << "9,9" << endl;
 
     return cache[0][0];
 }
@@ -195,5 +195,23 @@ int numberOfPaths(vector<vector<int>> matrix)
     }
     
     return count[m-1][n-1];
+}
+
+int find_min_path_in_triangle(std::vector<std::vector<int>> &a)
+{
+    int M = a.size();
+    int cache[M][M];
+    memset(cache, 0, sizeof(int)*M*M);
+    for (int i=M-1; i>=0; i--) {
+        for (int j=0; j<=i; j++) {
+            if (i == M-1) {
+                cache[i][j] = a[i][j];
+            } else {
+                cache[i][j] = min(cache[i+1][j], cache[i+1][j+1]) + a[i][j];
+            }
+        }
+    }
+    
+    return cache[0][0];
 }
 

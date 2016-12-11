@@ -21,7 +21,7 @@ int coinchange(int amount, std::vector<int> &denom);
 // Problem
 // Find a path from topleft to bottomright on matrix
 // to maximize the sum of weight
-int find_max_path(int x[10][10]);
+int find_max_path(std::vector<std::vector<int>> x);
 
 // Problem
 // Longest Increasing Sequence
@@ -35,6 +35,8 @@ int maxProductFromCutPieces(int n);
 // Number of path in [0,1] matrix
 // http://www.geeksforgeeks.org/count-possible-paths-top-left-bottom-right-nxm-matrix/
 int numberOfPaths(std::vector<std::vector<int>> matrix);
+
+int find_min_path_in_triangle(std::vector<std::vector<int>> &a);
 
 
 #endif /* dp_hpp */
