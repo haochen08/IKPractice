@@ -18,6 +18,13 @@ public:
     MyLinkedListNode(int _val):next(NULL),val(_val) {}
 };
 
+class MySpecialLinkedListNode {
+public:
+    MySpecialLinkedListNode *next, *arbit;
+    int val;
+    MySpecialLinkedListNode(int _val):next(NULL), arbit(NULL), val(_val) {}
+};
+
 
 // l1 or l2 may have loop
 int find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2);
@@ -39,6 +46,7 @@ MyLinkedListNode* zip(MyLinkedListNode* h);
 
 // opposite of zip
 MyLinkedListNode* unzip(MyLinkedListNode* h);
+MySpecialLinkedListNode *clone(MySpecialLinkedListNode *h);
 
 void linkedlist_test();
 

@@ -115,6 +115,8 @@ int find_max_path_recur(std::vector<std::vector<int>> &a, int i, int j);
 
 int find_min_path_in_triangle_recur(std::vector<std::vector<int>> &a, int i, int j);
 
+int min_edit_dist_between_str(std::string &st, std::string &ed, int p1, int p2, int st_len);
+
 void recursive_tests();
 
 #endif /* recursion_hpp */

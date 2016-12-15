@@ -230,6 +230,75 @@ MyLinkedListNode *unzip(MyLinkedListNode *h)
     return h;
 }
 
+MySpecialLinkedListNode *copyAndInsertNode(MySpecialLinkedListNode *h)
+{
+    MySpecialLinkedListNode *p = h;
+    while (p != NULL) {
+        MySpecialLinkedListNode *n = new MySpecialLinkedListNode(p->val);
+        n->next = p->next;
+        p->next = n;
+        p = n->next;
+    }
+    
+    return h;
+}
+
+void splitSpecialLinkedList(MySpecialLinkedListNode *h, MySpecialLinkedListNode **n1)
+{
+    if (h == NULL || h->next == NULL) {
+        *n1 = NULL;
+        return;
+    }
+    
+    if (h->next->next == NULL) {
+        *n1 = h->next;
+        h->next = NULL;
+        return;
+    }
+    
+    *n1 = h->next;
+    MySpecialLinkedListNode *p, *q;
+    p = h; q = *n1;
+    while (p != NULL && q != NULL && q->next != NULL) {
+        MySpecialLinkedListNode *tmp = q->next;
+        p->next = q->next;
+        q->next = q->next->next;
+        p = tmp;
+        q = q->next;
+    }
+    
+    p->next = NULL;
+}
+
+MySpecialLinkedListNode *clone(MySpecialLinkedListNode *h)
+{
+    h = copyAndInsertNode(h);
+    MySpecialLinkedListNode *p=h;
+    while (p != NULL && p->next != NULL) {
+        p->next->arbit = p->arbit->next;
+        p = p->next->next;
+    }
+    
+    MySpecialLinkedListNode *h1;
+    splitSpecialLinkedList(h, &h1);
+    return h1;
+}
+
+MySpecialLinkedListNode *buildSpecialLinkedList()
+{
+    MySpecialLinkedListNode *n1 = new MySpecialLinkedListNode(1);
+    MySpecialLinkedListNode *n2 = new MySpecialLinkedListNode(2);
+    MySpecialLinkedListNode *n3 = new MySpecialLinkedListNode(3);
+    MySpecialLinkedListNode *n4 = new MySpecialLinkedListNode(4);
+    MySpecialLinkedListNode *n5 = new MySpecialLinkedListNode(5);
+    n1->next = n2; n1->arbit = n3;
+    n2->next = n3; n2->arbit = n4;
+    n3->next = n4; n3->arbit = n5;
+    n4->next = n5; n4->arbit = n2;
+    n5->arbit = n1;
+    return n1;
+}
+
 void linkedlist_test()
 {
     vector<int> a = {1,2,3,4,5};
@@ -260,6 +329,21 @@ void linkedlist_test()
     cout << "Unzip h ---" << endl;
     printLinkedList(h);
     
-
+    cout << "Clone special linked list ===" << endl;
+    MySpecialLinkedListNode *sh = buildSpecialLinkedList();
+    MySpecialLinkedListNode *cloned = clone(sh);
+    MySpecialLinkedListNode *p;
+    p = cloned;
+    while (p != NULL) {
+        cout << p->val << " ";
+        p = p->next;
+    }
+    cout << endl;
     
+    p = cloned;
+    while (p != NULL) {
+        cout << p->arbit->val << " ";
+        p = p->next;
+    }
+    cout << endl;
 }

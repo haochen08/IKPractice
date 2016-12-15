@@ -870,6 +870,48 @@ int find_min_path_in_triangle_recur(std::vector<std::vector<int>> &a, int i, int
     return min(left, right);
 }
 
+int min_edit_dist_between_str(std::string &st, std::string &ed, int p1, int p2, int st_len)
+{
+    if (p1 == st.length() && p2 == ed.length()) {
+        return 0;
+    }
+    
+    if (p1 == st.length()) {
+        return ed.length()-st_len;
+    }
+    
+    if (p2 == ed.length()) {
+        return st_len-ed.length();
+    }
+    
+    int min = INT_MAX;
+    int cur;
+    if (st[p1] == ed[p2]) {
+        cur = min_edit_dist_between_str(st, ed, p1+1, p2+1, st_len);
+        if (cur < min) {
+            min = cur;
+        }
+    } else {
+        // Change
+        cur = min_edit_dist_between_str(st, ed, p1+1, p2+1, st_len)+1;
+        if (cur < min) {
+            min = cur;
+        }
+        // Add
+        cur = min_edit_dist_between_str(st, ed, p1, p2+1, st_len+1)+1;
+        if (cur < min) {
+            min = cur;
+        }
+        // Remove
+        cur = min_edit_dist_between_str(st, ed, p1+1, p2, st_len-1)+1;
+        if (cur < min) {
+            min = cur;
+        }
+    }
+    
+    return min;
+}
+
 void recursive_tests() {
     cout << "()=3" << endl;
     genBrackets(2);
@@ -897,6 +939,9 @@ void recursive_tests() {
     b = {{2},{3,4},{6,5,7},{4,1,8,3}};
     cout << "Min path sum in triangle(4) = " << find_min_path_in_triangle_recur(b, 0, 0) << endl;
     cout << "Min path sum in triangle(4) = " << find_min_path_in_triangle(b) << endl;
+    
+    string s1="abcd", s2="bcda";
+    cout << "shortest path =" << min_edit_dist_between_str(s1, s2, 0, 0, s1.length()) << endl;
 }
 
 

@@ -19,6 +19,7 @@
 #include "linked_list.hpp"
 #include "my_string.hpp"
 #include "graph.hpp"
+#include "ad_hoc.hpp"
 
 
 using namespace std;
@@ -239,6 +240,6 @@ void string_tests() {
 }
 
 int main(int argc, const char * argv[]) {
-    recursive_tests();
+    linkedlist_test();
     return 0;
 }
