@@ -23,5 +23,6 @@
 void shuffle_array_in_equally_likely(int a[], int m);
 
 std::vector<int> sliding_window_max(const std::vector<int> &a, int k);
+void super_stack();
 void ad_hoc_tests();
 #endif /* ad_hoc_hpp */

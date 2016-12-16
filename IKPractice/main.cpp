@@ -240,6 +240,6 @@ void string_tests() {
 }
 
 int main(int argc, const char * argv[]) {
-    linkedlist_test();
+    ad_hoc_tests();
     return 0;
 }

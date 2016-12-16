@@ -9,6 +9,8 @@
 #include "ad_hoc.hpp"
 #include <queue>
 #include <iostream>
+#include <vector>
+#include "my_string.hpp"
 
 using namespace std;
 
@@ -43,6 +45,42 @@ std::vector<int> sliding_window_max(const std::vector<int> &a, int k)
     return window_max;
 }
 
+void super_stack()
+{
+    vector<int>  stack;
+    vector<string> output;
+    string s;
+    getline(cin, s);
+    int size = stoi(s);
+    for (int i=0; i<size; i++) {
+        getline(cin, s);
+        vector<string> ops;
+        split_strings(s, ops, " ");
+        if (ops[0] == "push") {
+            stack.push_back(stoi(ops[1]));
+        } else if (ops[0] == "pop") {
+            if (!stack.empty()) {
+                stack.pop_back();
+            }
+        } else {
+            // unnecessary to do all
+            for (int i=0; i<stoi(ops[1]); i++) {
+                stack[i] += stoi(ops[2]);
+            }
+        }
+        
+        if (stack.empty()) {
+            output.push_back("EMPTY");
+        } else {
+            output.push_back(to_string(stack.back()));
+        }
+    }
+    
+    for (string line:output) {
+        cout << line << endl;
+    }
+}
+
 void ad_hoc_tests()
 {
     vector<int> a = {-3,1,-2,3,1,5};
@@ -52,4 +90,6 @@ void ad_hoc_tests()
         cout << i << " ";
     }
     cout << endl;
+    
+    super_stack();
 }

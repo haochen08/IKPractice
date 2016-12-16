@@ -275,7 +275,12 @@ MySpecialLinkedListNode *clone(MySpecialLinkedListNode *h)
     h = copyAndInsertNode(h);
     MySpecialLinkedListNode *p=h;
     while (p != NULL && p->next != NULL) {
-        p->next->arbit = p->arbit->next;
+        if (p->arbit) {
+            p->next->arbit = p->arbit->next;
+        } else {
+            p->next->arbit = NULL;
+        }
+        
         p = p->next->next;
     }
     
@@ -286,16 +291,11 @@ MySpecialLinkedListNode *clone(MySpecialLinkedListNode *h)
 
 MySpecialLinkedListNode *buildSpecialLinkedList()
 {
-    MySpecialLinkedListNode *n1 = new MySpecialLinkedListNode(1);
-    MySpecialLinkedListNode *n2 = new MySpecialLinkedListNode(2);
-    MySpecialLinkedListNode *n3 = new MySpecialLinkedListNode(3);
-    MySpecialLinkedListNode *n4 = new MySpecialLinkedListNode(4);
-    MySpecialLinkedListNode *n5 = new MySpecialLinkedListNode(5);
-    n1->next = n2; n1->arbit = n3;
-    n2->next = n3; n2->arbit = n4;
-    n3->next = n4; n3->arbit = n5;
-    n4->next = n5; n4->arbit = n2;
-    n5->arbit = n1;
+    MySpecialLinkedListNode *n1 = new MySpecialLinkedListNode(-1);
+    n1->arbit = n1;
+   // MySpecialLinkedListNode *n2 = new MySpecialLinkedListNode(1);
+    //n1->next = n2; //n1->arbit = n1;
+    //n2->arbit = n2;
     return n1;
 }
 
@@ -342,7 +342,11 @@ void linkedlist_test()
     
     p = cloned;
     while (p != NULL) {
-        cout << p->arbit->val << " ";
+        if (!p->arbit) {
+            cout << "# ";
+        } else {
+            cout << p->arbit->val << " ";
+        }
         p = p->next;
     }
     cout << endl;
