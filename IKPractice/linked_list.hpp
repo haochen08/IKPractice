@@ -27,7 +27,7 @@ public:
 
 
 // l1 or l2 may have loop
-int find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2);
+MyLinkedListNode *find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2);
 
 // Given p points to arbitary pointer in sorted linkedlist,
 // return median
