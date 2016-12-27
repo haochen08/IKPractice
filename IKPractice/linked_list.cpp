@@ -428,6 +428,125 @@ MySpecialLinkedListNode *buildSpecialLinkedList()
     return n1;
 }
 
+MyLinkedListNode *evenOddList(MyLinkedListNode *h)
+{
+    MyLinkedListNode *odd_cur=NULL, *cur=h, *even_h=NULL, *even_cur=NULL, *odd_h=NULL;
+    while (cur != NULL) {
+        if (cur->val % 2 == 0) {
+            // Connect the even nodes
+            if (even_cur) {
+                even_cur->next = cur;
+            }
+            even_cur = cur;
+            // Even_h will point the first even node if any
+            if (!even_h) {
+                even_h = cur;
+            }
+
+        } else {
+            // Connect the odd nodes
+            if (odd_cur) {
+                odd_cur->next = cur;
+            }
+            odd_cur = cur;
+            // Odd_h will point the first odd node if any
+            if (!odd_h) {
+                odd_h = cur;
+            }
+        }
+        
+        cur = cur->next;
+    }
+    
+    // Connect the next of even node to the header of odd list
+    if (even_cur) {
+        even_cur->next = odd_h;
+    }
+    
+    // Point the next of end odd node to NULL
+    if (odd_cur) {
+        odd_cur->next = NULL;
+    }
+    
+    // If there is any even node return the head of even list, otherwise return header of origin
+    return even_h ? even_h : h;
+}
+
+// Leetcode 328
+MyLinkedListNode* evenOddList2(MyLinkedListNode *node)
+{
+    if (node == NULL || node->next == NULL) {
+        return node;
+    }
+    
+    MyLinkedListNode *even, *odd, *even_h, *cur;
+    cur = node;
+    even = NULL;
+    odd = NULL;
+    even_h = node->next;
+    
+    int index = 1;
+    while (cur) {
+        if (cur->val % 2) {
+            if (odd) {
+                odd->next = cur;
+            }
+            odd = cur;
+        } else {
+            if (even) {
+                even->next = cur;
+            }
+            even = cur;
+        }
+        
+        index++;
+        cur = cur->next;
+    }
+    
+    if (even) {
+        even->next = node;
+    }
+
+    if (odd) {
+        odd->next = NULL;
+    }
+
+    return even_h;
+}
+
+MyLinkedListNode *swapNodeInLinkedList(MyLinkedListNode *l, int val1, int val2)
+{
+    MyLinkedListNode n(INT_MAX);
+    n.next = l;
+    MyLinkedListNode *p, *q, *prev, *cur;
+    p = q = NULL;
+    prev = &n; cur = l;
+    while (cur) {
+        if (cur->val == val1) {
+            p = prev;
+        } else if (cur->val == val2) {
+            q = prev;
+        }
+        
+        prev = cur;
+        cur = cur->next;
+    }
+    
+    if (p && q) {
+        MyLinkedListNode *cur1 = p->next, *cur2 = q->next;
+        // Swap the target by change their prevs 
+        p->next = cur2;
+        q->next = cur1;
+        // Swap the next of swap target
+        MyLinkedListNode *tp = cur1->next;
+        cur1->next = cur2->next;
+        cur2->next = tp;
+    }
+    
+    return n.next;
+}
+
+
 void linkedlist_test()
 {
     vector<int> a = {1,2,3,4,5};
@@ -483,4 +602,25 @@ void linkedlist_test()
         p = p->next;
     }
     cout << endl;
+    
+    cout << "even odd reorg ---" << endl;
+    h = buildLinkedListRecur(a, 0);
+    printLinkedList(evenOddList(h));
+    a = {1,3,5,7,9};
+    h = buildLinkedListRecur(a, 0);
+    printLinkedList(evenOddList(h));
+    a = {2,4,6,8,10};
+    h = buildLinkedListRecur(a, 0);
+    printLinkedList(evenOddList(h));
+    a = {2,4,6,8,10,1,3,5,7,9};
+    h = buildLinkedListRecur(a, 0);
+    printLinkedList(evenOddList(h));
+    a = {1,3,5,7,9,2,4,6,8,10};
+    h = buildLinkedListRecur(a, 0);
+    printLinkedList(evenOddList(h));
+    h = buildLinkedListRecur(a, 0);
+    printLinkedList(h);
+    h = swapNodeInLinkedList(h, 10, 3);
+    cout << "Swap 3 and 4 --- " << endl;
+    printLinkedList(h);
 }

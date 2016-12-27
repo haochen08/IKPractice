@@ -167,6 +167,8 @@ void postorder_iter(MyTreeNode *root)
             node = node->left;
         } else {
             MyTreeNode *peekNode = stack.top();
+            // Condition1: No right subtree, just stop
+            // Condition2: We already finish the right subtree
             if (peekNode->right != NULL && lastVisited != peekNode->right) {
                 node = peekNode->right;
             } else {
@@ -562,6 +564,57 @@ void sibling_connect(MyTreeNode *node)
     sibling_connect(node->right);
 }
 
+void k_nearest_inorder(MyTreeNode *root, std::stack<int> &s, int val, bool reverse)
+{
+    if (!root) {
+        return;
+    }
+    
+    k_nearest_inorder(reverse ? root->right : root->left, s, val, reverse);
+    if ((root->value > val && !reverse) || (root->value <= val && reverse)) {
+        return;
+    }
+    
+    s.push(root->value);
+    k_nearest_inorder(reverse ? root->left : root->right, s, val, reverse);
+}
+
+vector<int> k_nearest(MyTreeNode *root, int val, int k)
+{
+    stack<int> s1,s2;
+    vector<int> res;
+    k_nearest_inorder(root, s1, val, true);
+    k_nearest_inorder(root, s2, val, false);
+    while (k > 0) {
+        if (!s1.empty() && !s2.empty()) {
+            int val1 = s1.top();
+            int val2 = s2.top();
+            if (abs(val1-val) < abs(val2-val)) {
+                res.push_back(val1);
+                s1.pop();
+            } else {
+                res.push_back(val2);
+                s2.pop();
+            }
+            k--;
+        } else {
+            if (!s1.empty()) {
+                res.push_back(s1.top());
+                s1.pop();
+                k--;
+            } else if (!s2.empty()){
+                res.push_back(s2.top());
+                s2.pop();
+                k--;
+            } else {
+                break;
+            }
+        }
+    }
+    
+    return res;
+}
+
 bool findSingleValueTreesRecur(MyTreeNode *node, int &count) {
     if (node == NULL) {
         return true;
@@ -594,4 +647,66 @@ int findSingleValueTrees(MyTreeNode* node) {
     int count = 0;
     findSingleValueTreesRecur(node, count);
     return count;
+}
+
+void tree_tests() {
+    vector<int> a = {1,2,3,4,5,6,7,8};
+    MyTreeNode *root = createBST(a);
+    smallest_k_in_bst(root, 4);
+    cout << endl;
+    largest_k_in_bst(root, 4);
+    cout << endl;
+    printTreeByLevel(root);
+    
+    cout << "Test tree iterator" << endl;
+    MyTreeNodeIterator *it = new MyTreeNodeIterator(root);
+    while (it->hasNext()) {
+        MyTreeNode *n = it->next();
+        cout << n->value << " ";
+    }
+    cout << endl;
+    
+    cout << "Populate Sibling " << endl;
+    sibling_connect(root);
+    MyTreeNode *q = root;
+    cout << root->value << endl;
+    while (q) {
+        MyTreeNode *p = q->left;
+        while (p) {
+            cout << p->value << " ";
+            p = p->nextSibling;
+        }
+        cout << endl;
+        q = q->left;
+    }
+    
+    MyKTreeNode *node = new MyKTreeNode(0);
+    node->children[0] = new MyKTreeNode(5);
+    node->children[1] = new MyKTreeNode(5);
+    node->children[2] = new MyKTreeNode(5);
+    node->children[0]->children[0] = new MyKTreeNode(8);
+    node->children[0]->children[1] = new MyKTreeNode(7);
+    node->children[1]->children[0] = new MyKTreeNode(9);
+    node->children[1]->children[1] = new MyKTreeNode(8);
+    node->children[2]->children[0] = new MyKTreeNode(10);
+    node->children[2]->children[1] = new MyKTreeNode(9);
+    
+    
+    cout << "Height = " << height_of_ktree(node) << endl;
+    cout << "Diameter = " << diameter_of_ktree(node) << endl;
+    cout << "Distance = " << distance_of_ktree(node) << endl;
+    cout << "Diameter weighted = " << diameter_of_weighted_ktree(node) << endl;
+    
+    cout << "Largest BST:" ;
+    MyTreeNode *node1 = new MyTreeNode(1);
+    cout << largest_BST(node1) << endl;
+    
+    cout << "k closest nodes ---" << endl;
+    root = createBST(a);
+    vector<int> res = k_nearest(root, 3, 2);
+    for (auto i:res) {
+        cout << i << " ";
+    }
+    cout << endl;
+    
 }

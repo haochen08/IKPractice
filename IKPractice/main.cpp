@@ -111,58 +111,7 @@ vector<int> topK2(vector<int> iStream, int iK) {
 }
 
 
-void tree_tests() {
-    vector<int> a = {1,2,3,4,5,6,7,8};
-    MyTreeNode *root = createBST(a);
-    smallest_k_in_bst(root, 4);
-    cout << endl;
-    largest_k_in_bst(root, 4);
-    cout << endl;
-    printTreeByLevel(root);
-    
-    cout << "Test tree iterator" << endl;
-    MyTreeNodeIterator *it = new MyTreeNodeIterator(root);
-    while (it->hasNext()) {
-        MyTreeNode *n = it->next();
-        cout << n->value << " ";
-    }
-    cout << endl;
-    
-    cout << "Populate Sibling " << endl;
-    sibling_connect(root);
-    MyTreeNode *q = root;
-    cout << root->value << endl;
-    while (q) {
-        MyTreeNode *p = q->left;
-        while (p) {
-            cout << p->value << " ";
-            p = p->nextSibling;
-        }
-        cout << endl;
-        q = q->left;
-    }
-    
-    MyKTreeNode *node = new MyKTreeNode(0);
-    node->children[0] = new MyKTreeNode(5);
-    node->children[1] = new MyKTreeNode(5);
-    node->children[2] = new MyKTreeNode(5);
-    node->children[0]->children[0] = new MyKTreeNode(8);
-    node->children[0]->children[1] = new MyKTreeNode(7);
-    node->children[1]->children[0] = new MyKTreeNode(9);
-    node->children[1]->children[1] = new MyKTreeNode(8);
-    node->children[2]->children[0] = new MyKTreeNode(10);
-    node->children[2]->children[1] = new MyKTreeNode(9);
-    
-    
-    cout << "Height = " << height_of_ktree(node) << endl;
-    cout << "Diameter = " << diameter_of_ktree(node) << endl;
-    cout << "Distance = " << distance_of_ktree(node) << endl;
-    cout << "Diameter weighted = " << diameter_of_weighted_ktree(node) << endl;
-    
-    cout << "Largest BST:" ;
-    MyTreeNode *node1 = new MyTreeNode(1);
-    cout << largest_BST(node1) << endl;
-}
+
 
 
 
@@ -232,7 +181,7 @@ void string_tests() {
     }
     
     cout << "pattern match = " << wordPattern("abba", "dog cat cat dog") << endl;
-    
+     
     res = generatePalindromes("abab");
     for (string s:res) {
         cout << s << endl;
@@ -240,6 +189,6 @@ void string_tests() {
 }
 
 int main(int argc, const char * argv[]) {
-    ad_hoc_tests();
+    linkedlist_test();
     return 0;
 }

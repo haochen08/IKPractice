@@ -48,6 +48,10 @@ MyLinkedListNode* zip(MyLinkedListNode* h);
 MyLinkedListNode* unzip(MyLinkedListNode* h);
 MySpecialLinkedListNode *clone(MySpecialLinkedListNode *h);
 
+// Segregate the list by even and odd in list value
+// 1-3-5-2-4-6 -> 2-4-6-1-3-5
+MyLinkedListNode *evenOddList(MyLinkedListNode *h);
+
 void linkedlist_test();
 
 

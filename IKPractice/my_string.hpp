@@ -31,4 +31,5 @@ MyTrie buildTrie(std::vector<std::string> dictionary);
 std::vector<std::string> findWords(std::vector<std::vector<char>>& board, std::vector<std::string>& words);
 void split_strings(std::string s, std::vector<std::string> &string_list, std::string delimiter);
 bool wordPattern(std::string pattern, std::string str);
+
 #endif /* my_string_hpp */

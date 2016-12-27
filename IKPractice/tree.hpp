@@ -108,4 +108,6 @@ void sibling_connect(MyTreeNode *node);
 // Given binary tree, find total number of subtree which has the same value
 bool findSingleValueTreesRecur(MyTreeNode *node, int &count);
 
+void tree_tests();
+
 #endif /* tree_hpp */
