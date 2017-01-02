@@ -25,6 +25,35 @@ public:
     MySpecialLinkedListNode(int _val):next(NULL), arbit(NULL), val(_val) {}
 };
 
+class SkipList
+{
+private:
+    class Node
+    {
+    public:
+        std::vector<Node *> next;
+        int val;
+        Node(int _val, int level)
+        {
+            val = _val;
+            next.resize(level);
+        }
+    };
+    
+    Node *head;
+    int cur_level;
+    
+    int randomLevel();
+    
+public:
+    SkipList();
+    void insert(int x);
+    void remove(int x);
+    bool isContains(int x);
+    void print();
+
+    
+};
 
 // l1 or l2 may have loop
 MyLinkedListNode *find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2);

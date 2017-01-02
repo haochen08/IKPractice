@@ -158,36 +158,6 @@ void graph_test() {
     dfs(&g);
 }
 
-void string_tests() {
-    vector<string> res = readBinaryWatch(2);
-    for (string s:res) {
-        cout << s << endl;
-    }
-    
-    vector<int> input = {1,2,2};
-    vector<vector<int>> res2 = subsetsWithDup(input);
-    for (vector<int> p: res2 ) {
-        for (int i:p) {
-            cout << i << " ";
-        }
-        cout << endl;
-    }
-    
-    vector<vector<char>> board = {{'o','a', 'a','n'}, {'e','t','a','e'}, {'i','h','k','r'},{'i','f','l','v'}};
-    vector<string> words = {"oath","pea","eat","rain"};
-    res = findWords(board, words);
-    for (string s:res) {
-        cout << s << endl;
-    }
-    
-    cout << "pattern match = " << wordPattern("abba", "dog cat cat dog") << endl;
-     
-    res = generatePalindromes("abab");
-    for (string s:res) {
-        cout << s << endl;
-    }
-}
-
 int main(int argc, const char * argv[]) {
     linkedlist_test();
     return 0;

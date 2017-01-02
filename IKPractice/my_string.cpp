@@ -7,6 +7,7 @@
 //
 
 #include <unordered_map>
+#include <iostream>
 #include "my_string.hpp"
 
 using namespace std;
@@ -133,3 +134,17 @@ bool wordPattern(string pattern, string str) {
     
     return true;
 }
+
+void string_tests() {
+    vector<vector<char>> board = {{'o','a', 'a','n'}, {'e','t','a','e'}, {'i','h','k','r'},{'i','f','l','v'}};
+    vector<string> words = {"oath","pea","eat","rain"};
+    vector<string> res = findWords(board, words);
+    for (string s:res) {
+        cout << s << endl;
+    }
+    
+    cout << "pattern match = " << wordPattern("abba", "dog cat cat dog") << endl;
+    
+
+}
+

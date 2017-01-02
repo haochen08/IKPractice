@@ -1,4 +1,4 @@
-//
+    //
 //  ad_hoc.cpp
 //  Lesson-1
 //
@@ -10,9 +10,125 @@
 #include <queue>
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <stack>
 #include "my_string.hpp"
 
 using namespace std;
+
+void LRU_cache::set(int key, int val)
+{
+    if (this->map.find(key) != this->map.end()) {
+        this->elements.erase(this->map[key].second);
+    }
+    
+    // This must be below the erase operation
+    // Otherwise if we reset the existing key when cache is full,
+    // it will wrongly evict the front element.
+    if (this->elements.size() >= capacity) {
+        this->evict();
+    }
+    
+    this->elements.push_back(key);
+    list<int>::iterator it = --this->elements.end();
+    this->map[key] = {val, it};
+}
+
+int LRU_cache::get(int key)
+{
+    if (this->map.find(key) == this->map.end()) {
+        return -1;
+    }
+    
+    list<int>::iterator it = this->map[key].second;
+    int val = this->map[key].first;
+    this->elements.erase(it);
+    this->elements.push_back(*it);
+    this->map[key] = {val, --this->elements.end()};
+    return val;
+}
+
+void LRU_cache::evict()
+{
+    if (!this->elements.empty()) {
+        int key = this->elements.front();
+        this->elements.pop_front();
+        this->map.erase(this->map.find(key));
+    }
+}
+// End of LRU_cache
+
+void LFU_cache::set(int key, int val)
+{
+    if (map1.find(key) != map1.end()) {
+        my_tuple & tuple = map1[key];
+        tuple = {val, std::get<1>(tuple), std::get<2>(tuple)};
+        return;
+    }
+    
+    if (map1.size() >= capacity) {
+        evict();
+    }
+
+    list<int>::iterator pos = freq_list.begin();
+    addToFreqList(key, val, 0, pos);
+}
+
+int LFU_cache::get(int key)
+{
+    if (map1.find(key) == map1.end()) {
+        return -1;
+    }
+    
+    my_tuple tuple = map1[key];
+    int val = std::get<0>(tuple);
+    int freq = std::get<1>(tuple);
+    list<int> list1 = map2[freq];
+    // Remove from current frequence list
+    list1.erase(std::get<2>(tuple));
+    // if list is empty, remove the corresponding item in map;
+    list<int>::iterator it = map3[freq];
+    if (list1.empty()) {
+        it = freq_list.erase(it);
+        map2.erase(freq);
+        map3.erase(freq);
+    } else {
+        it++;
+    }
+    
+    // Add to the proper frequency list;
+    freq++;
+    addToFreqList(key, val, freq, it);
+    return val;
+}
+
+void LFU_cache::addToFreqList(int key, int val, int freq, list<int>::iterator pos)
+{
+    if (map2.find(freq) == map2.end()) {
+        std::list<int> list;
+        map2[freq] = list;
+        auto it = freq_list.insert(pos, freq);
+        map3[freq] = it;
+    }
+    map2[freq].push_back(key);
+    map1[key] = {val, freq, --map2[freq].end()};
+}
+
+void LFU_cache::evict()
+{
+    int freq = freq_list.front();
+    list<int> list = map2[freq];
+    int key = list.front();
+    my_tuple tuple = map1[key];
+    map1.erase(key);
+    list.pop_front();
+    if (list.empty()) {
+        map2.erase(freq);
+        freq_list.erase(map3[freq]);
+        map3.erase(freq);
+    }
+}
+// end of LFU_cache
 
 void shuffle_array_in_equally_likely(int a[], int m)
 {
@@ -45,40 +161,164 @@ std::vector<int> sliding_window_max(const std::vector<int> &a, int k)
     return window_max;
 }
 
-void super_stack()
+void super_stack(vector<string> &ops)
 {
-    vector<int>  stack;
-    vector<string> output;
+    typedef pair<int, int> mypair;
+    vector<mypair>  stack;
     string s;
-    getline(cin, s);
-    int size = stoi(s);
-    for (int i=0; i<size; i++) {
-        getline(cin, s);
-        vector<string> ops;
-        split_strings(s, ops, " ");
-        if (ops[0] == "push") {
-            stack.push_back(stoi(ops[1]));
-        } else if (ops[0] == "pop") {
+    for (int i=0; i<ops.size(); i++) {
+        vector<string> op;
+        split_strings(ops[i], op, " ");
+        if (op[0] == "push") {
+            stack.push_back({stoi(op[1]), 0});
+        } else if (op[0] == "pop") {
             if (!stack.empty()) {
+                int size = stack.size();
+                if (size > 1) {
+                    stack[size-2].second += stack.back().second;
+                }
                 stack.pop_back();
             }
         } else {
-            // unnecessary to do all
-            for (int i=0; i<stoi(ops[1]); i++) {
-                stack[i] += stoi(ops[2]);
-            }
+            int index = stoi(op[1]);
+            stack[index-1].second += stoi(op[2]);
         }
         
         if (stack.empty()) {
-            output.push_back("EMPTY");
+            cout << "EMPTY";
         } else {
-            output.push_back(to_string(stack.back()));
+            cout << stack.back().first + stack.back().second;
+        }
+    }
+}
+
+bool hasMatchingParantheses(std::string strExpression)
+{
+    stack<char> stack1;
+    stack<char> stack2;
+    stack<char> stack3;
+    for (char c:strExpression) {
+        switch (c) {
+            case '{':
+                stack1.push(c);
+                break;
+                
+            case '}':
+                if (stack1.empty()) {
+                    return false;
+                }
+                stack1.pop();
+                break;
+                
+            case '[':
+                stack2.push(c);
+                break;
+                
+            case ']':
+                if (stack2.empty()) {
+                    return false;
+                }
+                stack2.pop();
+                break;
+            case '(':
+                stack3.push(c);
+                break;
+                
+            case ')':
+                if (stack3.empty()) {
+                    return false;
+                }
+                stack3.pop();
+                break;
+                
+            default:
+                break;
         }
     }
     
-    for (string line:output) {
-        cout << line << endl;
+    return true;
+}
+
+// The idea of the problem is
+// 1. Use prev_start jumping the non-matching part.
+// E.g. (()))((())), prev_start will jump to index 5
+// 2. The current matching part start will be either the stack top if stack is not empty
+// E.g. when idx is at 9, it will be 5
+// or the prev_start -1 if it is empty
+// E.g. when idx is at 10, it will be 4
+// 3. [start, idx] is the current matching substring.
+// Update the max if needed
+int maxLenMatchingParen(string strParenExpression) {
+    stack<int> stack;
+    int max = 0;
+    int prev_start = 0;
+    for (int i=0; i<strParenExpression.length(); i++) {
+        char c = strParenExpression[i];
+        if (c == '(') {
+            stack.push(i);
+        } else {
+            if (stack.empty()) {
+                prev_start = i+1;
+            } else {
+                stack.pop();
+                // if stack is empty, it is full match from prev_start
+                // otherwise it is partial match
+                auto start = stack.empty() ? prev_start - 1 : stack.top();
+                auto size = i - start;
+                if (size > max)
+                {
+                    max = size;
+                }
+            }
+        }
     }
+    
+    return max;
+}
+
+void LRU_tests()
+{
+    cout << "LRU Tests ----" << endl;
+    LRU_cache cache(2);
+    cache.set(3, 1);
+    cout << cache.get(3) << endl;
+    cache.set(2, 2);
+    cache.set(3, 3);
+    cout << cache.get(3) << endl;
+    cout << cache.get(2) << endl;
+    cache.set(4, 4);
+    cout << cache.get(2) << endl;
+    cout << cache.get(3) << endl;
+}
+
+void LFU_tests()
+{
+    cout << "LFU Tests ----" << endl;
+    LFU_cache cache(2);
+    cache.set(1, 1);
+    cache.set(2, 2);
+    cout << cache.get(1) << endl;
+    cache.set(3, 3);
+    cout << cache.get(2) << endl;
+    cout << cache.get(3) << endl;
+    cache.set(4, 4);
+    cout << cache.get(1) << endl;
+    cout << cache.get(3) << endl;
+    cout << cache.get(4) << endl;
+}
+
+void min_stack_tests()
+{
+    cout << "MinStack tests ----" << endl;
+    MinStack ms;
+    ms.push(1);
+    ms.push(2);
+    ms.push(-1);
+    cout << ms.getMin() << endl;
+    ms.pop();
+    cout << ms.getMin() << endl;
+    ms.pop();
+    cout << ms.getMin() << endl;
 }
 
 void ad_hoc_tests()
@@ -91,5 +331,8 @@ void ad_hoc_tests()
     }
     cout << endl;
     
-    super_stack();
+    min_stack_tests();
+    
+    LRU_tests();
+    LFU_tests();
 }

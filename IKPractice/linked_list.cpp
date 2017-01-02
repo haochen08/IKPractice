@@ -8,9 +8,109 @@
 
 #include <vector>
 #include <iostream>
+#include <assert.h>
 #include "linked_list.hpp"
 
+
 using namespace std;
+
+SkipList::SkipList()
+{
+    srand(time(NULL));
+    head = new Node(0, WORD_BIT);
+    cur_level = 1;
+}
+
+void SkipList::insert(int x)
+{
+    int level = randomLevel();
+    if (level > cur_level) {
+        cur_level = level;
+    }
+    
+    Node *new_node = new Node(x, level);
+    Node *cur = head;
+    for (int i=level-1; i>=0; i--) {
+        while (cur->next[i]) {
+            if (cur->next[i]->val > x) {
+                break;
+            }
+            
+            cur = cur->next[i];
+        }
+        new_node->next[i] = cur->next[i];
+        cur->next[i] = new_node;
+    }
+}
+
+bool SkipList::isContains(int x)
+{
+    Node *cur = head;
+    
+    for (int i = cur_level-1; i>=0; i--) {
+        while (cur->next[i]) {
+            if (cur->next[i]->val == x) {
+                return true;
+            }
+            
+            if (cur->next[i]->val > x) {
+                break;
+            }
+            
+            cur = cur->next[i];
+        }
+    }
+    
+    return false;
+}
+
+void SkipList::remove(int x)
+{
+    Node *cur = head;
+    for (int i = cur_level-1; i >= 0; i--) {
+        while (cur->next[i]) {
+            if (cur->next[i]->val == x) {
+                cur->next[i] = cur->next[i]->next[i];
+                break;
+            }
+            
+            if (cur->next[i]->val > x) {
+                // Go to next level
+                break;
+            }
+            cur = cur->next[i];
+        }
+    }
+}
+
+void SkipList::print()
+{
+    for (int i=0; i<cur_level; i++) {
+        cout << i << ":";
+        Node *cur = head;
+        while (cur->next[i]) {
+            cout << cur->next[i]->val << " ";
+            cur = cur->next[i];
+        }
+        
+        cout << endl;
+    }
+    cout << endl;
+
+}
+
+
+int SkipList::randomLevel()
+{
+    int r = rand();
+    int level = 1;
+    while ((r & 1) == 1) {
+        level++;
+        r >>= 1;
+    }
+    
+    return level;
+}
 
 MyLinkedListNode *cycleStart(MyLinkedListNode *l)
 {
@@ -546,6 +646,23 @@ MyLinkedListNode *swapNodeInLinkedList(MyLinkedListNode *l, int val1, int val2)
     return n.next;
 }
 
+void skipList_test()
+{
+    cout << "Skip tests ---" << endl;
+    SkipList sl;
+    sl.insert(5);
+    sl.insert(3);
+    sl.insert(2);
+    sl.print();
+    sl.insert(1);
+    sl.insert(6);
+    sl.insert(4);
+    sl.print();
+    sl.remove(4);
+    sl.print();
+    assert(sl.isContains(4) == false);
+    assert(sl.isContains(3) == true);
+}
 
 void linkedlist_test()
 {
@@ -623,4 +740,5 @@ void linkedlist_test()
     h = swapNodeInLinkedList(h, 10, 3);
     cout << "Swap 3 and 4 --- " << endl;
     printLinkedList(h);
+    skipList_test();
 }

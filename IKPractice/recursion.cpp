@@ -942,6 +942,22 @@ void recursive_tests() {
     
     string s1="abcd", s2="bcda";
     cout << "shortest path =" << min_edit_dist_between_str(s1, s2, 0, 0, s1.length()) << endl;
+    
+    cout << " subsets with dup---" << endl;
+    vector<int> input = {1,2,2};
+    vector<vector<int>> res2 = subsetsWithDup(input);
+    for (vector<int> p: res2 ) {
+        for (int i:p) {
+            cout << i << " ";
+        }
+        cout << endl;
+    }
+    
+    cout << "generate palindromes---" << endl;
+    vector<string> res = generatePalindromes("abab");
+    for (string s:res) {
+        cout << s << endl;
+    }
 }
 
 
