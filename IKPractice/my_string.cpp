@@ -116,6 +116,13 @@ void split_strings(std::string s, std::vector<std::string> &string_list, std::st
     // Another way to do it is introducing two pointers to mark the start and end of the string
 }
 
+// The idea is
+// Two hashmaps
+// One from pattern->last occurence pos
+// One from string->last occurence pos
+// If str matches the pattern,
+// 1. the size of the two maps should be identical.
+// 2. when we linearly scan the string, the last pos should be identical
 bool wordPattern(string pattern, string str) {
     unordered_map<char, int> map1;
     unordered_map<string, int> map2;
@@ -135,6 +142,50 @@ bool wordPattern(string pattern, string str) {
     return true;
 }
 
+// substring start at st, len is ed-st
+std::pair<string, int> encodeString(std::string &str, std::vector<std::vector<std::pair<string, int>>> &result, std::vector<std::vector<bool>> &mem, int st, int ed)
+{
+    if (st > ed) {
+        return {"", -1};
+    }
+    
+    if (mem[st][ed]) {
+        return result[st][ed];
+    }
+    
+    if (st == ed) {
+        mem[st][ed] = true;
+        result[st][ed] = {str.substr(st,1), 1};
+        return result[st][ed];
+    }
+    
+    int min_len = INT_MAX;
+    for (int i=st; i<ed; i++) {
+        pair<string, int> tmp;
+        pair<string, int> left = encodeString(str, result, mem, st, i);
+        pair<string, int> right = encodeString(str, result, mem, i+1, ed);
+        if (left.first.length()>0 && right.first.length()>0) {
+            if (left.first == right.first) {
+                tmp = {left.first, left.second+right.second};
+            } else {
+                tmp = {left.first+right.first, 1};
+            }
+        } else if (left.first.length() == 0) {
+            tmp = right;
+        } else {
+            tmp = left;
+        }
+        
+        if (tmp.first.length() > 0 && tmp.first.length() < min_len) {
+            min_len = tmp.first.length();
+            result[st][ed] = tmp;
+        }
+    }
+    
+    mem[st][ed] = true;
+    return result[st][ed];
+}
+
 void string_tests() {
     vector<vector<char>> board = {{'o','a', 'a','n'}, {'e','t','a','e'}, {'i','h','k','r'},{'i','f','l','v'}};
     vector<string> words = {"oath","pea","eat","rain"};
@@ -142,6 +193,22 @@ void string_tests() {
     for (string s:res) {
         cout << s << endl;
     }
+    
+    vector<vector<bool>> mem;
+    vector<vector<pair<string, int>>> result;
+    string test_string = "abcabcabccdfcdfcdf";
+    int size = test_string.length();
+    result.resize(size);
+    for (auto &e:result) {
+        e.resize(size);
+    }
+    mem.resize(size);
+    for (auto &e:mem) {
+        e.resize(size);
+    }
+    
+    pair<string, int> res2 = encodeString(test_string, result, mem, 0, size-1);
+    cout << "encode string:" << res2.second << res2.first << endl;
     
     cout << "pattern match = " << wordPattern("abba", "dog cat cat dog") << endl;
     

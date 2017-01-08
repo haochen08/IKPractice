@@ -36,7 +36,11 @@ int maxProductFromCutPieces(int n);
 // http://www.geeksforgeeks.org/count-possible-paths-top-left-bottom-right-nxm-matrix/
 int numberOfPaths(std::vector<std::vector<int>> matrix);
 
+int maximumSubSeq(std::string str1, std::string str2);
+
 int find_min_path_in_triangle(std::vector<std::vector<int>> &a);
+
+void dp_tests();
 
 
 #endif /* dp_hpp */

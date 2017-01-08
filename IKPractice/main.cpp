@@ -111,23 +111,6 @@ vector<int> topK2(vector<int> iStream, int iK) {
 }
 
 
-
-
-
-
-void dp_test() {
-    vector<int> dem = {1,11,13};
-    int min_change = coinchange(46, dem);
-    vector<int> seq = {-7,1,0,2,0,3,0,4,5};
-    cout << min_change << endl;
-    cout << "lis = " << find_lis(seq) << endl;
-    vector<vector<int>> matrix = {{1,1,1,1},{1,1,1,1},{1,1,1,1}};
-    int num_of_paths = numberOfPaths(matrix);
-    cout << "number of paths:" << num_of_paths << endl;
-    cout << "Maxium Product Cut (15) = " << maxProductFromCutPieces(15) << endl;
-        
-}
-
 void sorting_test() {
     vector<vector<int>> a = {{1,3,5,7}, {2,4,5,8}, {3,4,5,6}};
     vector<int> result = k_merge_sort(a, 3);
@@ -159,6 +142,6 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    linkedlist_test();
+    dp_tests();
     return 0;
 }

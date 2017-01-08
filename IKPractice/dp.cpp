@@ -7,9 +7,19 @@
 //
 
 #include <iostream>
+#include <vector>
 #include "dp.hpp"
 
 using namespace std;
+
+template<class T>
+void init_dp(vector<vector<T>> &dp, int M, int N)
+{
+    dp.resize(M);
+    for (auto &i : dp) {
+        i.resize(N);
+    }
+}
 
 int coinchange(int amount, std::vector<int> &denom)
 {
@@ -215,3 +225,108 @@ int find_min_path_in_triangle(std::vector<std::vector<int>> &a)
     return cache[0][0];
 }
 
+int longestCommonSeq(std::string & str1, std::string & str2)
+{
+    vector<vector<int>> dp;
+    int M = str1.length()+1, N = str2.length()+1;
+    init_dp(dp, M, N);
+    
+    int res = INT_MIN;
+    for (int i=1; i<M; i++) {
+        for (int j=1; j<N; j++) {
+            if (str1[i-1] == str2[j-1]) {
+                dp[i][j] = dp[i-1][j-1]+1;
+            } else {
+                dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+            }
+            
+            if (dp[i][j] > res) {
+                res = dp[i][j];
+            }
+        }
+    }
+    
+    return res;
+}
+
+// Pattern can have '.' '*'
+bool regexMatch(std::string &str, std::string & pattern)
+{
+    vector<vector<bool>> dp;
+    int M = str.length()+1, N = pattern.length()+1;
+    init_dp(dp, M, N);
+    dp[0][0] = true;
+    for (int i=1; i<M; i++) {
+        dp[i][0] = false;
+    }
+    
+    for (int i=1; i<N; i++) {
+        if (pattern[i-1] == '*') {
+            dp[0][i] = dp[0][i-2];
+        } else {
+            dp[0][i] = false;
+        }
+    }
+    
+    for (int i=1; i<M; i++) {
+        for (int j=1; j<N; j++) {
+            if (pattern[j-1] == '*') {
+                // 0 ocurrance
+                dp[i][j] = dp[i][j-2];
+                if (!dp[i][j]) {
+                    // 1 occurance
+                    if (str[i-1] == pattern[j-2] || pattern[j-2] == '.') {
+                        dp[i][j] = dp[i-1][j];
+                    }
+                }
+            } else if (pattern[j-1] == '.' || str[i-1] == pattern[j-1]) {
+                dp[i][j] = dp[i-1][j-1];
+            } else {
+                dp[i][j] = false;
+            }
+        }
+    }
+    
+    return dp[M-1][N-1];
+}
+
+int zeroOneKnapsack(vector<int> & val, vector<int> & weight, int total_weight)
+{
+    vector<vector<int>> dp;
+    int M = val.size()+1, N = total_weight+1;
+    init_dp(dp, M, N);
+    for (int i=1; i<M; i++) {
+        for (int j=1; j<N; j++) {
+            int remaing_weight = total_weight - weight[i-1];
+            if (remaing_weight >= 0) {
+                // The former is to pick it, the latter is not to pick.
+                dp[i][j] = max(dp[i-1][remaing_weight]+val[i-1], dp[i-1][j]);
+            } else {
+                dp[i][j] = dp[i-1][j];
+            }
+        }
+    }
+    
+    return dp[M-1][N-1];
+}
+
+void dp_tests() {
+    vector<int> dem = {1,11,13};
+    int min_change = coinchange(46, dem);
+    vector<int> seq = {-7,1,0,2,0,3,0,4,5};
+    cout << min_change << endl;
+    cout << "lis = " << find_lis(seq) << endl;
+    vector<vector<int>> matrix = {{1,1,1,1},{1,1,1,1},{1,1,1,1}};
+    int num_of_paths = numberOfPaths(matrix);
+    cout << "number of paths:" << num_of_paths << endl;
+    cout << "Maxium Product Cut (15) = " << maxProductFromCutPieces(15) << endl;
+    string str1 = "abfhjujk", str2 = "afukjk";
+    cout << "Longest common sequence " << longestCommonSeq(str1, str2) << endl;
+    str1 = "abcd";
+    str2 = "d*";
+    cout << "Regex match: abcd d* = " << regexMatch(str1, str2) << endl;
+    vector<int> val = {22, 20, 15, 30, 24, 54, 21, 32, 18, 25};
+    vector<int> weight = {4, 2, 3, 5, 5, 6, 9, 7, 8, 10};
+    cout << "Knapsack01 = " << zeroOneKnapsack(val, weight, 30) << endl;
+    
+}
