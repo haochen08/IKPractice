@@ -310,6 +310,54 @@ int zeroOneKnapsack(vector<int> & val, vector<int> & weight, int total_weight)
     return dp[M-1][N-1];
 }
 
+bool isAddToSum(const vector<int> &val, int sum)
+{
+    vector<vector<bool>> dp;
+    int M = val.size()+1, N = sum+1;
+    init_dp(dp, M, N);
+    dp[0][0] = true;
+    for (int i=1; i<M; i++) {
+        for (int j=1; j<N; j++) {
+            if (val[i-1] >= sum) {
+                dp[i][j] = dp[i-1][j] || dp[i-1][sum-val[i-1]];
+            } else {
+                dp[i][j] = dp[i-1][j];
+            }
+            
+        }
+    }
+    
+    return dp[M-1][N-1];
+}
+
+int minMatriceMultiplication(vector<pair<int, int>> &matrice)
+{
+    vector<vector<int>> dp;
+    int M = matrice.size();
+    init_dp(dp, M, M);
+    for (int i=1; i<M; i++) {
+        for (int j=0; j<M-i; j++) {
+            // Can further simplify the following into one branch
+            if (i == 1) {
+                dp[j][j+i] = matrice[j].first*matrice[j].second*matrice[j+1].second;
+            } else {
+                int min = INT_MAX;
+                for (int k=1; k<i; k++) {
+                    int cur = dp[j][j+k] + dp[j+k+1][j+i] + matrice[j].first*matrice[j+k].second*matrice[j+i].second;
+                    if (cur < min) {
+                        min = cur;
+                    }
+                }
+                
+                dp[j][j+i] = min;
+            }
+
+        }
+    }
+    
+    return dp[0][M-1];
+}
+
 void dp_tests() {
     vector<int> dem = {1,11,13};
     int min_change = coinchange(46, dem);
@@ -328,5 +376,7 @@ void dp_tests() {
     vector<int> val = {22, 20, 15, 30, 24, 54, 21, 32, 18, 25};
     vector<int> weight = {4, 2, 3, 5, 5, 6, 9, 7, 8, 10};
     cout << "Knapsack01 = " << zeroOneKnapsack(val, weight, 30) << endl;
+    vector<pair<int, int>> matrice = {{2,3}, {3,6}, {6,4}, {4,5}};
+    cout << "Min chain multiplication num = " << minMatriceMultiplication(matrice) << endl;
     
 }
