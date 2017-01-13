@@ -137,20 +137,21 @@ void reverse_str(string &s)
 string reverse_words(string & sentence)
 {
     reverse_str(sentence);
-    vector<string> words;
-    split_strings(sentence, words, " ");
-    string res;
-    int i=0;
-    for (string &w:words) {
-        reverse_str(w);
-        if (i == words.size()-1)
-            res += w;
-        else
-            res += w+" ";
-        i++;
+    int i=0, j=0;
+    for (i=0; i<sentence.length(); i++) {
+        if (sentence[i] == ' ') {
+            if (i-1 > j) {
+                reverse_recur(sentence, j, i-1);
+            }
+            j = i+1;
+        }
     }
-
-    return res;
+    
+    if (i-1 > j) {
+        reverse_recur(sentence, j, i-1);
+    }
+    
+    return sentence;
 }
 
 // The idea is
