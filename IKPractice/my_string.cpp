@@ -116,6 +116,43 @@ void split_strings(std::string s, std::vector<std::string> &string_list, std::st
     // Another way to do it is introducing two pointers to mark the start and end of the string
 }
 
+void reverse_recur(string &s, int i, int j)
+{
+    if (i >= j) {
+        return;
+    }
+    
+    reverse_recur(s, i+1, j-1);
+    char c = s[i];
+    s[i] = s[j];
+    s[j] = c;
+}
+
+void reverse_str(string &s)
+{
+    reverse_recur(s, 0, s.length()-1);
+}
+
+// "god is good" => "good is god"
+string reverse_words(string & sentence)
+{
+    reverse_str(sentence);
+    vector<string> words;
+    split_strings(sentence, words, " ");
+    string res;
+    int i=0;
+    for (string &w:words) {
+        reverse_str(w);
+        if (i == words.size()-1)
+            res += w;
+        else
+            res += w+" ";
+        i++;
+    }
+
+    return res;
+}
+
 // The idea is
 // Two hashmaps
 // One from pattern->last occurence pos
@@ -211,7 +248,8 @@ void string_tests() {
     cout << "encode string:" << res2.second << res2.first << endl;
     
     cout << "pattern match = " << wordPattern("abba", "dog cat cat dog") << endl;
-    
+    string sentence = "There is good way to do this stuff";
+    cout << "reverse words in sentence of 'There is good way to do this stuff' is '" << reverse_words(sentence) << "'" << endl;
 
 }
 
