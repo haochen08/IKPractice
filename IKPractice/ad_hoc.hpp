@@ -33,20 +33,27 @@ private:
 
 class LFU_cache
 {
+    struct LRU_Node {
+        int key, val, freq;
+    };
+    
+    struct LFU_Node {
+        int freq;
+        std::list<LRU_Node> lru;
+    };
+    
 public:
     LFU_cache(int _capacity):capacity(_capacity){}
     void set(int key, int val);
     int get(int key);
 private:
-    typedef std::tuple<int, int, std::list<int>::iterator> my_tuple; // tuple <val, freq, it to elements node>
-    std::unordered_map<int, my_tuple> map1;   //key => tuple
-    std::unordered_map<int, std::list<int>> map2;  // freq => list
-    std::unordered_map<int, std::list<int>::iterator> map3;  // freq => iter of freq list
-    std::list<int> freq_list;
+    std::unordered_map<int, std::list<LFU_Node>::iterator> lfu_map;  // freq -> iter of lfu
+    std::unordered_map<int, std::list<LRU_Node>::iterator> lru_map;   // key -> iter in lru
+    std::list<LFU_Node> lfu;
     int capacity;
+    int min_freq;
 
     void evict();
-    void addToFreqList(int key, int val, int freq, std::list<int>::iterator it);
 };
 
 // Idea is to use two stack

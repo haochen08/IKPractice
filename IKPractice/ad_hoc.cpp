@@ -60,74 +60,78 @@ void LRU_cache::evict()
 
 void LFU_cache::set(int key, int val)
 {
-    if (map1.find(key) != map1.end()) {
-        my_tuple & tuple = map1[key];
-        tuple = {val, std::get<1>(tuple), std::get<2>(tuple)};
+    if (lru_map.count(key)) {
+        LRU_Node &rn = *lru_map[key];
+        rn.val = val;
         return;
     }
     
-    if (map1.size() >= capacity) {
+    if (lru_map.size() >= capacity) {
         evict();
     }
 
-    list<int>::iterator pos = freq_list.begin();
-    addToFreqList(key, val, 0, pos);
+    LRU_Node new_rn;
+    new_rn.key = key;
+    new_rn.val = val;
+    new_rn.freq = 1;
+    if (lfu_map.count(1)) {
+        LFU_Node &fn = *lfu_map[1];
+        fn.lru.push_back(new_rn);
+        lru_map[key] = --fn.lru.end();
+    } else {
+        LFU_Node new_fn;
+        new_fn.freq = 1;
+        new_fn.lru.push_back(new_rn);
+        lfu.push_front(new_fn);
+        lru_map[key] = --lfu.front().lru.end();
+        lfu_map[1] = lfu.begin();
+    }
+
+    min_freq = 1;
 }
 
 int LFU_cache::get(int key)
 {
-    if (map1.find(key) == map1.end()) {
+    if (!lru_map.count(key)) {
         return -1;
     }
     
-    my_tuple tuple = map1[key];
-    int val = std::get<0>(tuple);
-    int freq = std::get<1>(tuple);
-    list<int> list1 = map2[freq];
-    // Remove from current frequence list
-    list1.erase(std::get<2>(tuple));
-    // if list is empty, remove the corresponding item in map;
-    list<int>::iterator it = map3[freq];
-    if (list1.empty()) {
-        it = freq_list.erase(it);
-        map2.erase(freq);
-        map3.erase(freq);
+    LRU_Node rn = *lru_map[key];
+    LFU_Node &fn = *lfu_map[rn.freq];
+    fn.lru.erase(lru_map[key]);
+    lru_map.erase(key);
+    rn.freq++;
+    
+    int new_freq = rn.freq;
+    if (lfu_map.count(new_freq)) {
+        LFU_Node &fn = *lfu_map[new_freq];
+        fn.lru.push_back(rn);
+        lru_map[key] = --fn.lru.end();
     } else {
-        it++;
+        LFU_Node new_fn;
+        new_fn.freq = new_freq;
+        new_fn.lru.push_back(rn);
+        auto it = lfu.insert(++lfu_map[rn.freq-1], new_fn);
+        lfu_map[new_freq] = it;
+        lru_map[key] = --(*it).lru.end();
     }
     
-    // Add to the proper frequency list;
-    freq++;
-    addToFreqList(key, val, freq, it);
-    return val;
+    if ((*lfu_map[min_freq]).lru.empty()) {
+        min_freq++;
+    }
+    
+    return rn.val;
 }
 
-void LFU_cache::addToFreqList(int key, int val, int freq, list<int>::iterator pos)
-{
-    if (map2.find(freq) == map2.end()) {
-        std::list<int> list;
-        map2[freq] = list;
-        auto it = freq_list.insert(pos, freq);
-        map3[freq] = it;
-    }
-    map2[freq].push_back(key);
-    map1[key] = {val, freq, --map2[freq].end()};
-}
 
 void LFU_cache::evict()
 {
-    int freq = freq_list.front();
-    list<int> list = map2[freq];
-    int key = list.front();
-    my_tuple tuple = map1[key];
-    map1.erase(key);
-    list.pop_front();
-    if (list.empty()) {
-        map2.erase(freq);
-        freq_list.erase(map3[freq]);
-        map3.erase(freq);
-    }
+    LFU_Node &fn = *lfu_map[min_freq];
+    LRU_Node &rn = fn.lru.front();
+    fn.lru.pop_front();
+    lru_map.erase(rn.key);
 }
+
 // end of LFU_cache
 
 void shuffle_array_in_equally_likely(int a[], int m)

@@ -142,6 +142,6 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    string_tests();
+    dp_tests();
     return 0;
 }
