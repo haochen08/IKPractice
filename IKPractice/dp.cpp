@@ -12,15 +12,6 @@
 
 using namespace std;
 
-template<class T>
-void init_dp(vector<vector<T>> &dp, int M, int N)
-{
-    dp.resize(M);
-    for (auto &i : dp) {
-        i.resize(N);
-    }
-}
-
 int coinchange(int amount, std::vector<int> &denom)
 {
     vector<int> cache;
@@ -227,10 +218,9 @@ int find_min_path_in_triangle(std::vector<std::vector<int>> &a)
 
 int longestCommonSeq(std::string & str1, std::string & str2)
 {
-    vector<vector<int>> dp;
     int M = str1.length()+1, N = str2.length()+1;
-    init_dp(dp, M, N);
-    
+    int dp[M][N];
+    memset(dp, 0, sizeof(int)*M*N);
     int res = INT_MIN;
     for (int i=1; i<M; i++) {
         for (int j=1; j<N; j++) {
@@ -252,9 +242,8 @@ int longestCommonSeq(std::string & str1, std::string & str2)
 // Pattern can have '.' '*'
 bool regexMatch(std::string &str, std::string & pattern)
 {
-    vector<vector<bool>> dp;
     int M = str.length()+1, N = pattern.length()+1;
-    init_dp(dp, M, N);
+    bool dp[M][N];
     dp[0][0] = true;
     for (int i=1; i<M; i++) {
         dp[i][0] = false;
@@ -292,9 +281,9 @@ bool regexMatch(std::string &str, std::string & pattern)
 
 int zeroOneKnapsack(vector<int> & val, vector<int> & weight, int total_weight)
 {
-    vector<vector<int>> dp;
     int M = val.size()+1, N = total_weight+1;
-    init_dp(dp, M, N);
+    int dp[M][N];
+    memset(dp, 0, sizeof(int)*M*N);
     for (int i=1; i<M; i++) {
         for (int j=1; j<N; j++) {
             int remaing_weight = total_weight - weight[i-1];
@@ -312,9 +301,8 @@ int zeroOneKnapsack(vector<int> & val, vector<int> & weight, int total_weight)
 
 bool isAddToSum(const vector<int> &val, int sum)
 {
-    vector<vector<bool>> dp;
     int M = val.size()+1, N = sum+1;
-    init_dp(dp, M, N);
+    bool dp[M][N];
     dp[0][0] = true;
     for (int i=1; i<M; i++) {
         for (int j=1; j<N; j++) {
@@ -332,9 +320,9 @@ bool isAddToSum(const vector<int> &val, int sum)
 
 int minMatriceMultiplication(vector<pair<int, int>> &matrice)
 {
-    vector<vector<int>> dp;
     int M = matrice.size();
-    init_dp(dp, M, M);
+    int dp[M][M];
+    memset(dp, 0, sizeof(int)*M*M);
     for (int i=1; i<M; i++) {
         for (int j=0; j<M-i; j++) {
             // Can further simplify the following into one branch
@@ -358,6 +346,113 @@ int minMatriceMultiplication(vector<pair<int, int>> &matrice)
     return dp[0][M-1];
 }
 
+int minEditDistance(const string& str1, const string& str2)
+{
+    auto M = str1.length()+1, N = str2.length()+1;
+    int dp[M][N];
+    memset(dp, 0, sizeof(int)*M*N);
+    for (int i=1; i<N; i++) {
+        dp[0][i] = i;
+    }
+    
+    for (int i=1; i<M; i++) {
+        dp[i][0] = i;
+    }
+    
+    for (int i=1; i<M; i++) {
+        for (int j=1; j<N; j++) {
+            if (str1[i-1] == str2[j-1]) {
+                dp[i][j] = dp[i-1][j-1];
+            } else {
+                dp[i][j] = min(dp[i-1][j-1], min(dp[i-1][j], dp[i][j-1]))+1;
+            }
+        }
+    }
+    
+    return dp[M-1][N-1];
+}
+
+string longestPalindromeSubseq(const string& str)
+{
+    auto M = str.length();
+    int dp[M][M];
+    memset(dp, 0, sizeof(int)*M*M);
+    for (int i=0; i<M; i++) {
+        for (int j=0; j<M-i; j++) {
+            if (i == 0) {
+                dp[j][j+i] = 1;
+            } else {
+                if (str[j+i] == str[j]) {
+                    if (i >= 2) {
+                        dp[j][j+i] = 2+dp[j+1][j+i-1];
+                    } else {
+                        dp[j][j+i] = 2;
+                    }
+                } else {
+                    dp[j][j+i] = max(dp[j][j+i-1], dp[j+1][j+i]);
+                }
+            }
+        }
+    }
+    
+    // Now get the sub seq by tracking back the matrix
+    int i=0, j=M-1;
+    string s;
+    while (i<=j) {
+        if (dp[i][j] == dp[i][j-1]) {
+            j--;
+        } else if (dp[i][j] == dp[i+1][j]) {
+            i++;
+        } else {
+            s += str[i];
+            i++;
+            j--;
+        }
+    }
+    
+    // FIXME There is an bug is computing the offset here.
+    bool offset = 1;
+    if (i==j) {
+        s += str[i];
+        offset = 2;
+    }
+    
+    for (int i=s.length()-offset; i>=0; i--) {
+        s += s[i];
+    }
+    
+    return s;
+}
+
+string longestPalindromeSubstr(const string& str)
+{
+    auto M = str.length();
+    bool dp[M][M];
+    memset(dp, false, sizeof(bool)*M*M);
+    int max = 1;
+    int start = 0;
+    for (int i=0; i<M; i++) {
+        for (int j=0; j<M-i; j++) {
+            if (i == 0) {
+                dp[j][j+i] = true;
+            } else {
+                if (str[j+i] == str[j] && (i==1 || dp[j+1][j+i-1])) {
+                    dp[j][j+i] = true;
+                }
+            }
+            
+            if (dp[j][j+i]) {
+                if (i+1>max) {
+                    max = i+1;
+                    start = j;
+                }
+            }
+        }
+    }
+    
+    return str.substr(start, max);
+}
+
 void dp_tests() {
     vector<int> dem = {1,11,13};
     int min_change = coinchange(46, dem);
@@ -378,5 +473,9 @@ void dp_tests() {
     cout << "Knapsack01 = " << zeroOneKnapsack(val, weight, 30) << endl;
     vector<pair<int, int>> matrice = {{2,3}, {3,6}, {6,4}, {4,5}};
     cout << "Min chain multiplication num = " << minMatriceMultiplication(matrice) << endl;
-    
+    str1="abcd", str2="bcda";
+    cout << "min edit distance =" << minEditDistance(str1, str2) << endl;
+    str1 = "abcbcaba";
+    cout << "Longest palindrome substr = " << longestPalindromeSubstr(str1) << endl;
+    cout << "Longest palindrome subsequence = " << longestPalindromeSubseq(str1) << endl;
 }

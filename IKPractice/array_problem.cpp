@@ -254,6 +254,35 @@ string permAsSeq(int n, int k)
     return s;
 }
 
+// leetcode 487
+int findMaxConsecutiveOnes(vector<int> &nums)
+{
+    // This is to avoid judgement out of loop
+    nums.push_back(0);
+    // Prev1 track, prev2 tracks the start pos of 1
+    // E.g. 0 1 1 0 0 1 0
+    // before cur is at 3
+    // prev1 : 0, prev2 : 1
+    // after
+    // prev1 : 1, prev2 : 4
+    // then cur is at 4
+    // prev1 : 4, prev2 : 5
+    int prev1=0, prev2=0;
+    int max = 0;
+    for (int cur = 0; cur<nums.size(); cur++) {
+        if (nums[cur] == 0) {
+            if ((cur - prev1) > max) {
+                max = cur-prev1;
+            }
+            
+            prev1 = prev2;
+            prev2 = cur+1;
+        }
+    }
+    
+    return max;
+}
+
 
 
 
