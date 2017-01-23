@@ -253,7 +253,7 @@ MyTreeNode *createBST(std::vector<int> array)
 int height_of_ktree(MyKTreeNode *root)
 {
     if (root == NULL) {
-        // This should be -1 otherwise we are calculating the number of nodes
+        // This should be -1 otherwise we are calculating the level of nodes
         return -1;
     }
     
@@ -482,9 +482,33 @@ void printAllPaths(MyTreeNode *node, vector<int> &path) {
     path.pop_back();
 }
 
+// Similar to find all TreePathSum
 void printAllPaths(MyTreeNode* root) {
     vector<int> path;
     printAllPaths(root, path);
+}
+
+void pathSumRecur(MyTreeNode *root, vector<vector<int>> &res, vector<int> &sol, int sum) {
+    if (!root) {
+        return;
+    }
+    
+    sol.push_back(root->value);
+    if (!root->left && !root->right && sum == root->value) {
+        res.push_back(sol);
+    } else {
+        pathSumRecur(root->left, res, sol, sum-root->value);
+        pathSumRecur(root->right, res, sol, sum-root->value);
+    }
+    sol.pop_back();
+}
+
+// leetcode 113 similar to printAllPath
+vector<vector<int>> pathSum(MyTreeNode* root, int sum) {
+    vector<vector<int>> res;
+    vector<int> sol;
+    pathSumRecur(root, res, sol, sum);
+    return res;
 }
 
 int myfind(vector<int> &vec, int val, int st, int ed)

@@ -142,6 +142,6 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    dp_tests();
+    recursive_tests();
     return 0;
 }

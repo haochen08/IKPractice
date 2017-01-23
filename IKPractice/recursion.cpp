@@ -158,12 +158,17 @@ void genBrackets(int n)
 // T: O(2^n)
 int countTreesNum(int n)
 {
+    // Note if n==0, return 1
     if (n == 0 || n == 1) {
         return 1;
     }
     
+    // In level 0, n is total number
+    // We put one node as root,
+    // then divide the remaining n-1 between left and right.
+    // Go recursively to deal with the subtree
     int sum=0;
-    for (int i=0; i<=n-1; i++) {
+    for (int i=0; i<n; i++) {
         int left = countTreesNum(i);
         int right = countTreesNum(n-1-i);
         sum += left*right;
@@ -214,10 +219,8 @@ void combinationSumRecur1(vector<int>& candidates, vector<int> &sol, int level, 
     combinationSumRecur1(candidates, sol, level+1, target, res);
     
     sol.push_back(candidates[level]);
-    if (target > candidates[level]) {
+    if (target >= candidates[level]) {
         combinationSumRecur1(candidates, sol, level, target-candidates[level], res);
-    } else {
-        combinationSumRecur1(candidates, sol, level+1, target-candidates[level], res);
     }
     sol.pop_back();
 }
@@ -957,6 +960,16 @@ void recursive_tests() {
     vector<string> res = generatePalindromes("abab");
     for (string s:res) {
         cout << s << endl;
+    }
+    
+    cout << "Combination Sum for [3,6,7] to 7" << endl;
+    input = {3,2,1};
+    res2 = combinationSum1(input, 3);
+    for (vector<int> p: res2 ) {
+        for (int i:p) {
+            cout << i << " ";
+        }
+        cout << endl;
     }
 }
 

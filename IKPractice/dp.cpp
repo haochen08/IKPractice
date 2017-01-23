@@ -453,6 +453,28 @@ string longestPalindromeSubstr(const string& str)
     return str.substr(start, max);
 }
 
+// Using memoization here
+int numTreesRecur(int n, int dp[]) {
+    if (n==0 || n==1)
+        dp[n] = 1;
+    if (dp[n] == 0) {
+        int sum=0;
+        for (int i=0; i<n; i++) {
+            int left = numTreesRecur(i, dp);
+            int right = numTreesRecur(n-1-i, dp);
+            sum += left*right;
+        }
+        dp[n] = sum;
+    }
+    return dp[n];
+}
+
+int numTrees(int n) {
+    int dp[n+1];
+    memset(dp, 0, sizeof(int)*(n+1));
+    return numTreesRecur(n, dp);
+}
+
 void dp_tests() {
     vector<int> dem = {1,11,13};
     int min_change = coinchange(46, dem);
