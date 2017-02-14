@@ -60,6 +60,11 @@ string DutchFlagSort(string strColoredBalls) {
         } else if (strColoredBalls[g] == 'G'){
             g++;
         } else {
+            // B could be swap from front to end
+            // e.g. BBRRGGBB
+            // First two Bs will be swapped with last twos.
+            // But b will go to the fast none B which is G and swap
+            // => GBRRBBB
             swap(strColoredBalls[g], strColoredBalls[b]);
             b--;
         }

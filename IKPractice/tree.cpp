@@ -406,21 +406,24 @@ MyTreeNode* flip_tree(MyTreeNode *node)
     return node;
 }
 
-bool is_BSTInOrder(MyTreeNode *node, int &prev)
-{
-    if (!node) {
+// It must be (MyTreeNode * &) in reference to update prev throughout different level of recursions.
+bool isValidBSTRecur(MyTreeNode *root, MyTreeNode * &prev) {
+    if (!root)
         return true;
+    bool isValid = isValidBSTRecur(root->left, prev);
+    if (!isValid)
+        return false;
+    if (prev && root->value <= prev->value) {
+        return false;
     }
     
-    bool res = is_BSTInOrder(node->left, prev) && (node->value > prev);
-    prev = node->value;
-    return res && is_BSTInOrder(node->right, prev);
+    prev = root;
+    return isValidBSTRecur(root->right, prev);
 }
 
-bool is_BST(MyTreeNode *node)
-{
-    int prev = INT_MIN;
-    return is_BSTInOrder(node, prev);
+bool isValidBST(MyTreeNode* root) {
+    MyTreeNode *prev = NULL;
+    return isValidBSTRecur(root, prev);
 }
 
 int largest_BST_recur(MyTreeNode *node, int &min, int &max, bool &isBST, int &maxBSTNo) {
@@ -522,23 +525,24 @@ int myfind(vector<int> &vec, int val, int st, int ed)
     return -1;
 }
 
-MyTreeNode *rebuild_tree_recur(std::vector<int> &preorder, std::vector<int> &inorder, int st, int ed)
+MyTreeNode *rebuild_tree_recur(std::vector<int> &preorder, std::vector<int> &inorder, int st, int ed, int preStart)
 {
-    static int i = 0;
     if (st > ed) {
         return NULL;
     }
     
-    MyTreeNode *node = new MyTreeNode(preorder[i]);
-    int index = myfind(inorder, node->value, st, ed);
-    node->left = rebuild_tree_recur(preorder, inorder, st, index-1);
-    node->right = rebuild_tree_recur(preorder, inorder, index+1, ed);
+    MyTreeNode *node = new MyTreeNode(preorder[preStart]);
+    int indexInOrder = myfind(inorder, node->value, st, ed);
+    int leftTreeNo = indexInOrder - st;
+    node->left = rebuild_tree_recur(preorder, inorder, st, indexInOrder-1, preStart+1);
+    //preStart moves along preOrder by number of leftTreeNo which can be computed in inorder array
+    node->right = rebuild_tree_recur(preorder, inorder, indexInOrder+1, ed, leftTreeNo+preStart+1);
     return node;
 }
 
 MyTreeNode* rebuild_tree(std::vector<int> &preorder, std::vector<int> &inorder)
 {
-    return rebuild_tree_recur(preorder, inorder, 0, preorder.size()-1);
+    return rebuild_tree_recur(preorder, inorder, 0, preorder.size()-1, 0);
 }
 
 // root is subtree's root recursively
