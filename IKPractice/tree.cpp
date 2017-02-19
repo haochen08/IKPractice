@@ -114,12 +114,15 @@ void inorder_iter_limited_by_k(MyTreeNode *root, int k)
     stack<MyTreeNode *> stack;
     MyTreeNode *node = root;
     int i = 0;
+    // 1. It should be || here when we go back to root
     while ((!stack.empty() || node != NULL) && i < k)
     {
+        // 2. Go push nodes of current left sub-tree whose root is node
         if (node != NULL) {
             stack.push(node);
             node = node->left;
         } else {
+            // 3. Finished left sub-tree and go to right sub-tree. This is when we can pop subtree's root
             node = stack.top();
             cout << node->value << ",";
             node = node->right;
@@ -172,6 +175,7 @@ void postorder_iter(MyTreeNode *root)
             if (peekNode->right != NULL && lastVisited != peekNode->right) {
                 node = peekNode->right;
             } else {
+                // In right subtree
                 cout << peekNode->value << ",";
                 lastVisited = peekNode;
                 stack.pop();
