@@ -15,6 +15,7 @@
 
 using namespace std;
 
+// See the relation with stairs and fibnocci
 int coinchangecount(int amount, vector<int> &denom)
 {
     auto M = amount+1;

@@ -184,6 +184,35 @@ void postorder_iter(MyTreeNode *root)
     }
 }
 
+void flattenTreeToListInOrderInplaceRecur(MyTreeNode *n, MyTreeNode *&prev)
+{
+    if (!n) {
+        return;
+    }
+    
+    prev = n;
+    flattenTreeToListInOrderInplaceRecur(n->left, prev);
+    prev->right = n;
+    prev->left = NULL;
+    n->left = NULL;
+    flattenTreeToListInOrderInplaceRecur(n->right, prev);
+}
+
+MyTreeNode *flattenTreeToListInOrderInplace(MyTreeNode *n)
+{
+    if (!n) {
+        return n;
+    }
+    
+    MyTreeNode *prev, *nh = n;
+    while (nh->left) {
+        nh = nh->left;
+    }
+    
+    flattenTreeToListInOrderInplaceRecur(n, prev);
+    return nh;
+}
+
 void printTreeByLevel(MyTreeNode *n)
 {
     if (n == NULL)
@@ -740,5 +769,12 @@ void tree_tests() {
         cout << i << " ";
     }
     cout << endl;
-    
+ 
+    MyTreeNode *fl = flattenTreeToListInOrderInplace(root);
+    while (fl)
+    {
+        cout << fl->value << " ";
+        fl = fl->right;
+    }
+    cout << endl;
 }
