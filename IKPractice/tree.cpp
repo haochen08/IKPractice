@@ -9,6 +9,8 @@
 #include <iostream>
 #include <deque>
 #include <stack>
+
+#include "linked_list.hpp"
 #include "tree.hpp"
 
 using namespace std;
@@ -182,6 +184,22 @@ void postorder_iter(MyTreeNode *root)
             }
         }
     }
+}
+
+void flattenTreeInOrder(MyTreeNode *n, MyLinkedListNode * &h, MyLinkedListNode * &t)
+{
+    if (!n)
+        return;
+    flattenTreeInOrder(n->left, h, t);
+    MyLinkedListNode *ln = new MyLinkedListNode(n->value);
+    if (!h) {
+        h = ln;
+        t = ln;
+    } else {
+        t->next = ln;
+        t = ln;
+    }
+    flattenTreeInOrder(n->right, h, t);
 }
 
 void flattenTreeToListInOrderInplaceRecur(MyTreeNode *n, MyTreeNode *&prev)
@@ -770,11 +788,13 @@ void tree_tests() {
     }
     cout << endl;
  
-    MyTreeNode *fl = flattenTreeToListInOrderInplace(root);
-    while (fl)
+    MyLinkedListNode *h = NULL, *t = NULL;
+    cout << "flatten linked list" << endl;
+    flattenTreeInOrder(root, h, t);
+    while (h)
     {
-        cout << fl->value << " ";
-        fl = fl->right;
+        cout << h->val << " ";
+        h = h->next;
     }
     cout << endl;
 }
