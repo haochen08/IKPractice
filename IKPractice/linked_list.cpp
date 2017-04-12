@@ -222,7 +222,7 @@ MyLinkedListNode *find_intersection(MyLinkedListNode *l1, MyLinkedListNode *l2)
 }
 
 // FIXME: 1-2-3-4-5-6 => 1-3-5
-MyLinkedListNode *reorderInEvenOdd(MyLinkedListNode *L)
+MyLinkedListNode *reorderInEvenOdd(MyLinkedListNode *n)
 {
     return NULL;
 }
@@ -239,6 +239,8 @@ bool isPalindromeList(MyLinkedListNode *L)
 // 1->2(Node)->3(->NULL)<-4<-5(h)
 // 1->2-><-3<-4<-5(h)
 // 1->2(->NULL)<-3<-4<-5(h)
+// Node will be traversed from start to the end
+// h will the the new header after hitting the end and all the way pass back through recursion
 MyLinkedListNode *reverse_linkedlist_recur(MyLinkedListNode *node)
 {
     MyLinkedListNode *h;
@@ -260,14 +262,14 @@ MyLinkedListNode *reverse_linkedlist(MyLinkedListNode *h)
 }
 
 
-MyLinkedListNode *reverseLinkedlistInGroup(MyLinkedListNode *h, int k)
+MyLinkedListNode *reverseLinkedlistInGroup(MyLinkedListNode *n, int k)
 {
-    if (k == 1 || h->next == NULL) {
-        return h;
+    if (k == 1 || n->next == NULL) {
+        return n;
     }
     
     MyLinkedListNode *prev, *current, *tp;
-    current = h;
+    current = n;
     prev = tp = NULL;
     int cnt = 0;
     while (current != NULL && cnt < k) {
@@ -279,7 +281,7 @@ MyLinkedListNode *reverseLinkedlistInGroup(MyLinkedListNode *h, int k)
     }
     
     if (current) {
-        h->next = reverseLinkedlistInGroup(current, k);
+        n->next = reverseLinkedlistInGroup(current, k);
     }
     
     return prev;
@@ -416,6 +418,29 @@ void splitLinkedList(MyLinkedListNode *h, MyLinkedListNode **n1)
     p->next = NULL;
 }
 
+void splitLinkedList2(MyLinkedListNode *h, MyLinkedListNode **n1)
+{
+    if (h == NULL || h->next == NULL) {
+        *n1 = NULL;
+        return;
+    }
+    
+    if (h->next->next == NULL) {
+        *n1 = h->next;
+        h->next = NULL;
+        return;
+    }
+    
+    *n1 = h->next;
+    MyLinkedListNode *p, *q;
+    p = h; q = *n1;
+    while (p != NULL && q != NULL && p->next != NULL) {
+        p->next = q->next;
+        p = q;
+        q = q->next;
+    }
+}
+
 MyLinkedListNode* zip(MyLinkedListNode* pList) {
     if (pList == NULL || pList->next == NULL || pList->next->next == NULL)
         return pList;
@@ -449,7 +474,7 @@ MyLinkedListNode *unzip(MyLinkedListNode *h)
     }
     
     MyLinkedListNode *h2;
-    splitLinkedList(h, &h2);
+    splitLinkedList2(h, &h2);
     h2 = reverse_linkedlist(h2);
     MyLinkedListNode *p = h;
     while (p->next != NULL) {

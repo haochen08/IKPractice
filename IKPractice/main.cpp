@@ -142,6 +142,6 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    tree_tests();
+    linkedlist_test();
     return 0;
 }
