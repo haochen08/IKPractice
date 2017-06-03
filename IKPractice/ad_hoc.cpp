@@ -280,6 +280,47 @@ int maxLenMatchingParen(string strParenExpression) {
     return max;
 }
 
+typedef struct {
+    char c;
+    int index;
+} mytuple;
+
+void fixBrackets(string str)
+{
+    stack<mytuple> s;
+    for (int i=0; i<str.length(); i++) {
+        if (str[i] == '(') {
+            mytuple t;
+            t.index = i;
+            t.c = '(';
+            s.push(t);
+        } else {
+            mytuple x;
+            x.index = i;
+            x.c = ')';
+            if (!s.empty()) {
+                mytuple t = s.top();
+                if (t.c == '(') {
+                    s.pop();
+                } else {
+                    s.push(x);
+                }
+            } else {
+                s.push(x);
+            }
+        }
+    }
+    
+    while (!s.empty()) {
+        mytuple t = s.top();
+        str = str.erase(t.index);
+        s.pop();
+        cout << t.index << " ";
+    }
+    
+    cout << endl;
+}
+
 void LRU_tests()
 {
     cout << "LRU Tests ----" << endl;
@@ -336,7 +377,9 @@ void ad_hoc_tests()
     cout << endl;
     
     min_stack_tests();
-    
+    string s = "))()(()))(";
+    fixBrackets(s);
+    cout << "s= " << s << endl;
     LRU_tests();
-    LFU_tests();
+   // LFU_tests();
 }

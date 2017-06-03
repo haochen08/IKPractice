@@ -25,6 +25,20 @@ public:
     }
 };
 
+class MyTrieForPalins : public MyTrie {
+public:
+    std::vector<int> palins;
+    int pos;
+    MyTrieForPalins *next[26];
+    MyTrieForPalins() {
+        MyTrie();
+        for (int i=0;i<26;i++) {
+            next[i] = NULL;
+        }
+        pos = -1;
+    }
+};
+
 
 void rotateString(std::string &s);
 MyTrie buildTrie(std::vector<std::string> dictionary);

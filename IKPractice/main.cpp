@@ -142,6 +142,7 @@ void graph_test() {
 }
 
 int main(int argc, const char * argv[]) {
-    linkedlist_test();
+    string_tests();
+
     return 0;
 }

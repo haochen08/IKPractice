@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <iostream>
 #include "my_string.hpp"
+#include "recursion.hpp"
 
 using namespace std;
 
@@ -224,6 +225,71 @@ std::pair<string, int> encodeString(std::string &str, std::vector<std::vector<st
     return result[st][ed];
 }
 
+MyTrieForPalins buildTrieOnReverseOfStrings(vector<string> &strings)
+{
+    MyTrieForPalins trie;
+    for (int i=0; i<strings.size(); i++) {
+        string s = strings[i];
+        MyTrieForPalins *cur = &trie;
+        for (int j=s.length()-1; j>=0; j--) {
+            // check the suffix of string is palindrome or not
+            if (isPalindrome(s, 0, j)) {
+                cur->palins.push_back(i);
+            }
+            
+            int idx = s[j]-'a';
+            if (!cur->next[idx]) {
+                cur->next[idx] = new MyTrieForPalins();
+            }
+
+            cur = cur->next[idx];
+        }
+        cur->pos = i;
+        // "" is also palindrome
+        // This is to match abcd and dcba
+        cur->palins.push_back(i);
+    }
+    
+    return trie;
+}
+
+vector<pair<int, int>> palindromePairs(vector<string> &strings)
+{
+    // 1. Scan the strings and build trie on the reverse of string
+    // 1.1 Store the index where the palindrome substring begins
+    // 2. Scan the strings
+    // 2.1 Scan each string from the start, attemp to match another element on trie
+    // 2.2 Check if the remainder is palindrome (it could be empty here); if yes add both string index into vector
+    // O(nk^2)
+    MyTrieForPalins trie = buildTrieOnReverseOfStrings(strings);
+    vector<pair<int, int>>  res;
+    for (int i=0; i<strings.size(); i++) {
+        string s = strings[i];
+        int j = 0;
+        MyTrieForPalins *cur = &trie;
+        while (cur && j < s.length()) {
+            // If we hit a word in list and the word is NOT the one being scanned
+            // and the remainder of scanned one is palindrome
+            // e.g. abc[xyx]  => cba(abc in trie)
+            if (cur->pos >=0 && cur->pos != i && isPalindrome(s, j, s.length()-1)) {
+                res.push_back({i,cur->pos});
+            }
+            cur = cur->next[s[j]-'a'];
+            j++;
+        }
+        
+        if (cur) {
+            for (int pos:cur->palins) {
+                if (pos != i) {
+                    res.push_back({i, pos});
+                }
+            }
+        }
+    }
+    
+    return res;
+}
+
 void string_tests() {
     vector<vector<char>> board = {{'o','a', 'a','n'}, {'e','t','a','e'}, {'i','h','k','r'},{'i','f','l','v'}};
     vector<string> words = {"oath","pea","eat","rain"};
@@ -252,5 +318,12 @@ void string_tests() {
     string sentence = "There is good way to do this stuff";
     cout << "reverse words in sentence of 'There is good way to do this stuff' is '" << reverse_words(sentence) << "'" << endl;
 
+    vector<string> strings = {"", "daad", "lls", "s", "sssll"};
+    vector<pair<int, int>> res1 = palindromePairs(strings);
+    cout << "res of palindromePairs is:";
+    for (auto &e:res1) {
+        cout << "{" << e.first << "," << e.second << "}";
+    }
+    cout << endl;
 }
 

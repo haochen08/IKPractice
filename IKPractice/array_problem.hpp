@@ -67,4 +67,22 @@ void nextPermutation(std::vector<int>& nums);
 // Return kth perm sequence of n permutation sequences.
 std::string permAsSeq(int n, int k);
 
+// leetcode 251
+// Flatten 2D Vector
+class Vector2D
+{
+public:
+    std::vector<std::vector<int>>::iterator cur, end;
+    int j;
+    Vector2D(std::vector<std::vector<int>> array) {
+        cur = array.begin();
+        end = array.end();
+        j=0;
+    }
+    
+    bool hasNext();
+    
+    int next(); 
+};
+
 #endif /* array_problem_hpp */

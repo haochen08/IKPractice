@@ -283,7 +283,21 @@ int findMaxConsecutiveOnes(vector<int> &nums)
     return max;
 }
 
+// Implementation of vector 2D flatten
+bool Vector2D::hasNext()
+{
+    while (cur != end && j == (*cur).size()) {
+        cur++; j=0;
+    }
+    
+    return cur != end;
+}
 
+int Vector2D::next()
+{
+    hasNext();
+    return (*cur)[j++];
+}
 
 
 

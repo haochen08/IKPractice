@@ -28,6 +28,7 @@
 // 5. T(n) = nT(n-1)
 // O(n!)
 // e.g. Permutation
+bool isPalindrome(std::string s, int l, int r);
 
 bool isPalindrome(std::string s);
 
