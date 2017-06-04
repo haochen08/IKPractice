@@ -7,6 +7,8 @@
 //
 
 #include <iostream>
+#include <vector>
+#include <string>
 #include "graph.hpp"
 
 using namespace std;
@@ -78,3 +80,35 @@ void dfs(MyGraph *g)
     cout << endl;
 }
 
+void dfs(bool adj[][26], bool visited[], vector<string> &order)
+{
+    
+    
+}
+
+// leetcode 269
+vector<string> alienDict(vector<string> &dict)
+{
+    bool adj[26][26];
+    bool visited[26];
+    
+    memset(visited, false, 26);
+    // build graph
+    for (int i=0; i<dict.size(); i++) {
+        string word1 = dict[i];
+        for (char c:word1) {
+            visited[c-'a'] = false;
+        }
+        
+        if (i > 0) {
+            string word0 = dict[i-1];
+            int len = min(word0.length(), word1.length());
+            for (int j=0; j<len; j++) {
+                adj[word0[j]-'a'][word1[j]-'a'] = true;
+            }
+        }
+    }
+    
+    vector<string> res;
+    dfs(adj, visited, res);
+}

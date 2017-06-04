@@ -290,6 +290,74 @@ vector<pair<int, int>> palindromePairs(vector<string> &strings)
     return res;
 }
 
+string getOneLine(vector<string> &strings, int L, int st, int ed)
+{
+    if (st > ed) {
+        // strings is empty
+        return string(L, ' ');
+    }
+    
+    string s;
+    if (st == ed) {
+        // the only word on the line
+        return s+string(L - strings[st].length(),' ');
+    }
+    
+    int len_of_all_strings = 0;
+    for (int i = st; i < ed; i++) {
+        len_of_all_strings += strings[i].length();
+    }
+    
+    int extra_spaces_no = (L-len_of_all_strings) / (ed-st);
+    int pos_to_add_one_extra_space = (L-len_of_all_strings) % (ed-st);
+    if (ed == strings.size()-1) {
+        extra_spaces_no = 1;
+        pos_to_add_one_extra_space = -1;
+    }
+    
+    s += strings[st];
+    for (int i=st+1; i<=ed; i++) {
+        s += string(extra_spaces_no, ' ');
+        if (i - st <= pos_to_add_one_extra_space) {
+            s += ' ';
+        }
+        s += strings[i];
+    }
+    
+    //  Special logic for the last line processing
+    if (ed == strings.size()-1) {
+        s += string(L-s.length(), ' ');
+    }
+    return s;
+}
+
+vector<string> textJustify(vector<string> &strings, int L)
+{
+    // 1. Scan strings
+    // a. s
+    // Edge cases
+    // a. Add all spaces to the end for last line
+    // b. If there is only one word in line, add all spaces after it to the end
+    int prev=0, len=-1;
+    vector<string> res;
+    for (int i=0; i<strings.size(); i++) {
+        // Why +1 always, how about the last word without space
+        if (len+1+strings[i].length() <= L) {
+            len += 1+strings[i].length();
+        } else {
+            // get the line
+            res.push_back(getOneLine(strings, L, prev, i-1));
+            len = strings[i].length();
+            prev = i;
+        }
+    }
+    
+    // The last line
+    res.push_back(getOneLine(strings, L, prev, strings.size()-1));
+    
+    return res;
+}
+
 void string_tests() {
     vector<vector<char>> board = {{'o','a', 'a','n'}, {'e','t','a','e'}, {'i','h','k','r'},{'i','f','l','v'}};
     vector<string> words = {"oath","pea","eat","rain"};
