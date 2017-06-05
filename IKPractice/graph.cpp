@@ -80,35 +80,72 @@ void dfs(MyGraph *g)
     cout << endl;
 }
 
-void dfs(bool adj[][26], bool visited[], vector<string> &order)
+// visited = -1 // Not visited
+// visited = 1 // Visited
+// Visited = 2 // visiting
+bool dfs(bool adj[][26], int *visited, string &order, int root)
 {
+    visited[root] = 2;
+    for (int i=0; i<26; i++) {
+        if (adj[root][i]) {
+            if (visited[i] == 2) {
+                return false;
+            } else if (visited[i] == -1) {
+                if (!dfs(adj, visited, order, i)) {
+                    return false;
+                }
+                // Why not the following
+                //return dfs(adj, visited, order, i);
+            }
+        }
+    }
     
-    
+    visited[root] = 1;
+    order += root+'a';
+    return true;
 }
 
 // leetcode 269
-vector<string> alienDict(vector<string> &dict)
+string alienDict(vector<string> &dict)
 {
-    bool adj[26][26];
-    bool visited[26];
+    static int N=26;
+    bool adj[N][26];
+    int visited[N];
     
-    memset(visited, false, 26);
+    for (int i=0; i<N; i++) {
+        for (int j=0; j<26; j++) {
+            adj[i][j] = false;
+        }
+    }
+    memset(visited, -1, 26);
     // build graph
     for (int i=0; i<dict.size(); i++) {
         string word1 = dict[i];
         for (char c:word1) {
-            visited[c-'a'] = false;
+            visited[c-'a'] = 0;
         }
         
         if (i > 0) {
             string word0 = dict[i-1];
             int len = min(word0.length(), word1.length());
             for (int j=0; j<len; j++) {
-                adj[word0[j]-'a'][word1[j]-'a'] = true;
+                char c1 = word0[j]-'a';
+                char c2 = word1[j]-'a';
+                if (c1 != c2) {
+                    adj[c1][c2] = true;
+                }
             }
         }
     }
     
-    vector<string> res;
-    dfs(adj, visited, res);
+    string res;
+    for (int i=0; i<N; i++) {
+        if (visited[i] == -1) {
+            if (!dfs(adj, visited, res, i)) {
+                return "";
+            }
+        }
+    }
+    
+    return res;
 }
