@@ -297,14 +297,14 @@ string getOneLine(vector<string> &strings, int L, int st, int ed)
         return string(L, ' ');
     }
     
-    string s;
     if (st == ed) {
         // the only word on the line
-        return s+string(L - strings[st].length(),' ');
+        return strings[st]+string(L - strings[st].length(),' ');
     }
     
+    string s;
     int len_of_all_strings = 0;
-    for (int i = st; i < ed; i++) {
+    for (int i = st; i <= ed; i++) {
         len_of_all_strings += strings[i].length();
     }
     
@@ -392,6 +392,13 @@ void string_tests() {
     for (auto &e:res1) {
         cout << "{" << e.first << "," << e.second << "}";
     }
+    
     cout << endl;
+    
+    strings = {"This", "is", "an", "example", "of", "text", "justification."};
+    res = textJustify(strings, 16);
+    for (string &e:res) {
+        cout << e << "," << endl;
+    }
 }
 

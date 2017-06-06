@@ -61,8 +61,8 @@ void dfs_recur(MyVertex *v)
 {
     cout << v->label << " ";
     for (MyVertex *n: v->neighbors) {
-        if (!n->visited) {
-            n->visited = true;
+        if (n->visitStatus == NotVisited) {
+            n->visitStatus = Visited;
             dfs_recur(n);
         }
     }
@@ -71,8 +71,8 @@ void dfs_recur(MyVertex *v)
 void dfs(MyGraph *g)
 {
     for (MyVertex *v:g->adjacent_list) {
-        if (!v->visited) {
-            v->visited = true;
+        if (v->visitStatus == NotVisited) {
+            v->visitStatus = Visited;
             dfs_recur(v);
         }
     }
@@ -80,7 +80,41 @@ void dfs(MyGraph *g)
     cout << endl;
 }
 
-// visited = -1 // Not visited
+bool hasCycleRecur(MyVertex *v)
+{
+    v->visitStatus = Visiting;
+    for (MyVertex *n:v->neighbors) {
+        if (n->visitStatus == Visiting) {
+            return true;
+        } else if (n->visitStatus == NotVisited){
+            if (hasCycleRecur(n)) {
+                return true;
+            }
+            
+            // Should not return if we haven't found any cycle
+            // since we haven't reached the end of dfs starting from root
+        }
+    }
+    
+    v->visitStatus = Visited;
+    return false;
+}
+
+bool hasCycle(MyGraph &g)
+{
+    for (MyVertex *v: g.adjacent_list) {
+        if (v->visitStatus == NotVisited) {
+            if (hasCycleRecur(v)) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+// visited = -1 // Not a valid node
+// visited = 0 // Not visited
 // visited = 1 // Visited
 // Visited = 2 // visiting
 bool dfs(bool adj[][26], int *visited, string &order, int root)
@@ -90,12 +124,10 @@ bool dfs(bool adj[][26], int *visited, string &order, int root)
         if (adj[root][i]) {
             if (visited[i] == 2) {
                 return false;
-            } else if (visited[i] == -1) {
+            } else if (visited[i] == 0) {
                 if (!dfs(adj, visited, order, i)) {
                     return false;
                 }
-                // Why not the following
-                //return dfs(adj, visited, order, i);
             }
         }
     }
@@ -140,7 +172,7 @@ string alienDict(vector<string> &dict)
     
     string res;
     for (int i=0; i<N; i++) {
-        if (visited[i] == -1) {
+        if (visited[i] == 0) {
             if (!dfs(adj, visited, res, i)) {
                 return "";
             }
@@ -148,4 +180,14 @@ string alienDict(vector<string> &dict)
     }
     
     return res;
+}
+
+void graph_test() {
+    vector<int> labels = {0,1,2,3};
+    MyGraph g(labels);
+    g.addEdge(0, 1);
+    g.addEdge(1, 2);
+    g.print();
+    //dfs(&g);
+    hasCycle(g) ? cout << "has cycle" << endl : cout << "not have cycle" << endl;
 }

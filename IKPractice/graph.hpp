@@ -11,13 +11,20 @@
 
 #include <vector>
 
+typedef enum {
+    NotVisited,
+    Visiting,
+    Visited,
+} VertexVisitStatus;
+
+
 class MyVertex
 {
 public:
-    bool visited;
+    VertexVisitStatus visitStatus;
     int label;
     std::vector<MyVertex *> neighbors;
-    MyVertex(int _label):label(_label),visited(false) {};
+    MyVertex(int _label):label(_label),visitStatus(NotVisited) {};
     void addEdge(MyVertex *dst);
 };
 
@@ -31,5 +38,9 @@ public:
 };
 
 void dfs(MyGraph *g);
+
+bool hasCycle(MyGraph *g);
+
+void graph_test();
 
 #endif /* graph_hpp */

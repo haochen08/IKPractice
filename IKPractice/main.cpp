@@ -127,22 +127,8 @@ void hanoi(int n, int source, int target, int middle) {
 }
 
 
-
-void graph_test() {
-    vector<int> labels = {0,1,2,3};
-    MyGraph g(labels);
-    g.addEdge(0, 1);
-    g.addEdge(0, 2);
-    g.addEdge(1, 2);
-    g.addEdge(2, 0);
-    g.addEdge(2, 3);
-    g.addEdge(3, 3);
-    g.print();
-    dfs(&g);
-}
-
 int main(int argc, const char * argv[]) {
-    string_tests();
+    graph_test();
 
     return 0;
 }
