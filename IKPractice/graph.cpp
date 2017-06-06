@@ -145,11 +145,12 @@ string alienDict(vector<string> &dict)
     int visited[N];
     
     for (int i=0; i<N; i++) {
+        visited[i] = -1;
         for (int j=0; j<26; j++) {
             adj[i][j] = false;
         }
     }
-    memset(visited, -1, 26);
+
     // build graph
     for (int i=0; i<dict.size(); i++) {
         string word1 = dict[i];
@@ -165,6 +166,9 @@ string alienDict(vector<string> &dict)
                 char c2 = word1[j]-'a';
                 if (c1 != c2) {
                     adj[c1][c2] = true;
+                    // This is key step "wke" -> "wla"
+                    // k->l is right, but e->a is wrong
+                    break;
                 }
             }
         }
@@ -179,6 +183,7 @@ string alienDict(vector<string> &dict)
         }
     }
     
+    std::reverse(res.begin(), res.end());
     return res;
 }
 
